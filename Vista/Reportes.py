@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+import os
 
 #funciones
 #Funcion para centrar la ventana
@@ -19,7 +20,22 @@ def seleccionar_elemento(event):
     selected_item = ListBox.get(index)
 
     # Actualizar una etiqueta para mostrar el elemento seleccionado
-    etiqueta.config(text=f"Elemento seleccionado: {selected_item}")
+    lblNombreReporte.config(text=f"{selected_item}")
+
+    # Actualizar el contenido del Text
+    mostrar_contenido(selected_item)
+
+# Función para actualizar el contenido del Text
+def mostrar_contenido(selected_item):
+    contenido_text = contenido.get(selected_item, '')  # Obtener el contenido del elemento seleccionado
+    text_area.delete('1.0', tk.END)  # Borrar el contenido actual del Text
+    text_area.insert(tk.END, contenido_text)
+
+# Función para manejar la selección en el Listbox
+def seleccionar_archivo(event):
+    # Obtener el elemento seleccionado
+    seleccion = Listbox.get(Listbox.curselection())
+    print(f"Seleccionaste: {seleccion}")
 
 #Ventana
 #se crea el objeto ventana a partir de la clase TK, para hacer una ventana
@@ -41,6 +57,23 @@ cuadroV = tk.Frame(ventana, bg="#1E1F24")
 #Ubicacion del frame
 cuadroV.place(relx=0.65, rely=0.0, relwidth=0.7, relheight=1.0, anchor="n")
 
+#Label (Subtitulo)
+#Texto del Label
+lblNombreReporte = tk.Label(cuadroV, text="Nombre de reporte")
+#Configuracion de Label
+lblNombreReporte.config(fg = "#72737A", bg= "#1E1F24", font=("Arial", 15))
+#Ubicacion
+lblNombreReporte.pack(anchor=("w"), padx=25, pady=(100,10))
+lblNombreReporte.pack()
+
+# Creacion de text area
+text_area = tk.Text(cuadroV, wrap=tk.WORD)
+text_area.pack()
+
+# Puedes establecer un ancho y alto inicial
+text_area.config(width=95, height=27, bg="#1B1A20", fg="white", relief="solid", borderwidth=0)
+text_area.pack(anchor=("w"), padx=25, pady=10)
+
 #Frame (Listados de reportes)
 #Creacion y especificacion decolor
 cuadroL = tk.Frame(ventana, bg="#1B1A20")
@@ -57,7 +90,7 @@ lblNU.pack(anchor=("w"), padx=25, pady=(100,10))
 lblNU.pack()
 
 #Frame (cuadro)
-#Creacion y especificacion decolor
+#Creacion y especificacion de color
 cuadroLI = tk.Frame(cuadroL, bg="#16151A", relief="solid", borderwidth=0)
 #Ubicacion del frame
 cuadroLI.place(relx=0.475, rely=0.2, relwidth=0.8, relheight=0.7, anchor="n")
@@ -78,19 +111,30 @@ btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
 # Crear un ListBox
 ListBox = tk.Listbox(cuadroLI, selectmode=tk.SINGLE)
+ListBox.configure(bg="#25242D", fg = "#AEAEB0")
 ListBox.place(x=10, y=60, width=260, height=425)
 
-# Agregar elementos al ListBox
-elementos = ["Manzana", "Banana", "Cereza", "Dátil", "Frambuesa", "Uva"]
-for elemento in elementos:
-    ListBox.insert(tk.END, elemento)
+# Directorio que se explora
+directorio = "D:/trabajos/Tesis/Repositorio/DNOProject/Recursos/TXTs"
+
+# Obtener una lista de nombres de archivos en el directorio
+archivos = os.listdir(directorio)
+
+# Agregar los nombres de archivos al Listbox
+for archivo in archivos:
+    ListBox.insert(tk.END, archivo)
+
+# Crear un diccionario con contenido asociado
+contenido = {
+    "Manzana.txt": "Este es el contenido de la manzana.",
+    "Banana": "Este es el contenido de la banana.",
+    "Cereza": "Este es el contenido de la cereza.",
+    "Naranja": "Este es el contenido de la naranja.",
+    "Frambuesa": "Este es el contenido de la frambuesa.",
+    "Uva": "Este es el contenido de la uva."
+}
 
 # Configurar un evento de selección en el ListBox
 ListBox.bind("<<ListboxSelect>>", seleccionar_elemento)
 
-# Crear una etiqueta para mostrar el elemento seleccionado
-etiqueta = tk.Label(ventana, text="")
-etiqueta.pack()
-
 ventana.mainloop()
-
