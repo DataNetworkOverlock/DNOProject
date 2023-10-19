@@ -1,107 +1,131 @@
 import tkinter as tk
-from tkinter import *
-import os
 import subprocess
 
-#funciones
-#Funcion para centrar la ventana
-def centrar_ventana(ventana):
-    ventana.update_idletasks()
-    ancho = ventana.winfo_width()
-    alto = ventana.winfo_height()
-    x = (ventana.winfo_screenwidth() - ancho) // 2
-    y = (ventana.winfo_screenheight() - alto) // 2
-    ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
+def create_panel_window(root, app):
+    panel_window = tk.Toplevel(root)
+    PanelWindow(panel_window, app)
 
-def seleccionar_elemento(event):
-    seleccion = ListTools.get(ListTools.curselection())
-    etiqueta.config(text=f"{seleccion}")
+class PanelWindow:
+    def __init__(self, root, app):
+        self.root = root
+        self.app = app
+        root.title("Inicio de Sesión") #Titulo de la ventana
+        root.geometry("1200x720") #Tamaño de la ventana
+        root.configure(bg="#1B1A20")# Cambiar el color de fondo a un color hexadecimal
+        root.resizable(False, False)# Impedir que la ventana sea redimensionada
+        # Centrar la ventana
+        root.update_idletasks()
+        ancho = root.winfo_width()
+        alto = root.winfo_height()
+        x = (root.winfo_screenwidth() - ancho) // 2
+        y = (root.winfo_screenheight() - alto) // 2
+        root.geometry(f"{ancho}x{alto}+{x}+{y}")
 
-def ejecutar_comando(event):
-    comando = entrada_terminal.get("insert linestart", "insert lineend")
-    entrada_terminal.insert(tk.END, f"\n> {comando}\n")
-    entrada_terminal.mark_set(tk.INSERT, "insert + 1l linestart")
-    entrada_terminal.see(tk.END)
+        self.ListTools = None
+        self.entrada_terminal = None
+        self.etiqueta = None
 
-    proceso = subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
-    for linea in proceso.stdout:
-        entrada_terminal.insert(tk.END, linea)
-        entrada_terminal.mark_set(tk.INSERT, "insert + 1l linestart")
-        entrada_terminal.see(tk.END)
-        entrada_terminal.update()
+        self.create_widgets() # Llamado de funcion para crear los widgets
 
-#Ventana
-#se crea el objeto ventana a partir de la clase TK, para hacer una ventana
-ventana = Tk()
-#Titulo de la ventana
-ventana.title("Panel")
-#Tamaño de la ventana
-ventana.geometry("1200x720+0+0")
-# Cambiar el color de fondo a un color hexadecimal
-ventana.configure(bg="#1B1A20")
-# Impedir que la ventana sea redimensionada
-ventana.resizable(False, False)
+    def create_widgets(self):
+        #Frame (Consola)
+        #Creacion y especificacion decolor
+        cuadroCmd = tk.Frame(self.root, bg="#1E1F24")
+        #Ubicacion del frame
+        cuadroCmd.place(relx=0.65, rely=0.0, relwidth=0.7, relheight=1.0, anchor="n")
 
-centrar_ventana(ventana)  # Llamada de la función para centrar la ventana
+        #Label (Principal)
+        #Texto del Label
+        lblOverlook = tk.Label(cuadroCmd,text="OVERLOCK")
+        #Color de la letra Label
+        lblOverlook.config(fg = "#B7BBD0")
+        #Color del label (transparente)
+        lblOverlook.config(bg= "#1E1F24")
+        #tipo de letra y tamaño de esta
+        lblOverlook.config(font=("Arial", 40))
+        #Ubicacion del Label
+        lblOverlook.place(relx=0.5, rely=0.05, anchor="n")
 
-#Frame (Consola)
-#Creacion y especificacion decolor
-cuadroCmd = tk.Frame(ventana, bg="#1E1F24")
-#Ubicacion del frame
-cuadroCmd.place(relx=0.65, rely=0.0, relwidth=0.7, relheight=1.0, anchor="n")
+        #Creacion del textArea que muestra resultados de cmd
+        self.entrada_terminal = tk.Text(cuadroCmd)
+        self.entrada_terminal.config(width=95, height=26, bg="black", fg="white", relief="solid", borderwidth=0, font=("Consolas", 12))
+        self.entrada_terminal.pack(anchor="w", padx=25, pady=110)
+        self.entrada_terminal.bind("<Return>", self.ejecutar_comando)
 
-#Label (Principal)
-#Texto del Label
-lblOverlook =Label(cuadroCmd,text="OVERLOCK")
-#Color de la letra Label
-lblOverlook.config(fg = "#B7BBD0")
-#Color del label (transparente)
-lblOverlook.config(bg= "#1E1F24")
-#tipo de letra y tamaño de esta
-lblOverlook.config(font=("Arial", 40))
-#Ubicacion del Label
-lblOverlook.place(relx=0.5, rely=0.05, anchor="n")
+        #Frame (Herramientas)
+        #Creacion y especificacion decolor
+        cuadroTool = tk.Frame(self.root, bg="#1B1A20")
+        #Ubicacion del frame
+        cuadroTool.place(relx=0.14, rely=0.0, relwidth=0.25, relheight=1.0, anchor="n")
 
-#Creacion del textArea que muestra resultados de cmd
-entrada_terminal = tk.Text(cuadroCmd)
-entrada_terminal.config(width=95, height=26, bg="black", fg="white", relief="solid", borderwidth=0, font=("Consolas", 12))
-entrada_terminal.pack(anchor="w", padx=25, pady=110)
+        #Label (titulo)
+        #Texto del Label
+        lblTools = tk.Label(cuadroTool,text="Herramientas")
+        #Color de la letra Label
+        lblTools.config(fg = "#B7BBD0")
+        #Color del label (transparente)
+        lblTools.config(bg= "#1B1A20")
+        #tipo de letra y tamaño de esta
+        lblTools.config(font=("Arial", 25))
+        #Ubicacion del Label
+        lblTools.place(relx=0.5, rely=0.05, anchor="n")
 
-entrada_terminal.bind("<Return>", ejecutar_comando)
+        # Crear un ListBox
+        self.ListTools = tk.Listbox(cuadroTool, selectmode=tk.SINGLE)
+        self.ListTools.configure(bg="#25242D", fg = "#AEAEB0", font=("Verdana", 20, "bold"))
+        self.ListTools.place(x=40, y=100, width=260, height=425)
 
-#Frame (Herramientas)
-#Creacion y especificacion decolor
-cuadroTool = tk.Frame(ventana, bg="#1B1A20")
-#Ubicacion del frame
-cuadroTool.place(relx=0.14, rely=0.0, relwidth=0.25, relheight=1.0, anchor="n")
+        # Agregar elementos al ListTools
+        elementos = ["kismet", "john the ripper", "sqlmap", "nmap", "nikto"]
+        for elemento in elementos:
+            self.ListTools.insert(tk.END, elemento)
 
-#Label (titulo)
-#Texto del Label
-lblTools =Label(cuadroTool,text="Herramientas")
-#Color de la letra Label
-lblTools.config(fg = "#B7BBD0")
-#Color del label (transparente)
-lblTools.config(bg= "#1B1A20")
-#tipo de letra y tamaño de esta
-lblTools.config(font=("Arial", 25))
-#Ubicacion del Label
-lblTools.place(relx=0.5, rely=0.05, anchor="n")
+        # Configurar un evento de selección en el ListTools
+        self.ListTools.bind("<<ListboxSelect>>", self.seleccionar_elemento)
 
-# Crear un ListBox
-ListTools = tk.Listbox(cuadroTool, selectmode=tk.SINGLE)
-ListTools.configure(bg="#25242D", fg = "#AEAEB0", font=("Verdana", 20, "bold"))
-ListTools.place(x=10, y=100, width=260, height=425)
+        #boton (registrarse)
+        #configuracion de boton
+        btnR = tk.Button(cuadroTool, text="Ver reportes", relief="sunken", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14),command=self.ir_a_reportes)
+        #ubicacion de boton
+        btnR.place(relx=0.33, rely=0.765, anchor="n")
 
-# Agregar elementos al ListTools
-elementos = ["kismet", "john the ripper", "sqlmap", "nmap", "nikto"]
-for elemento in elementos:
-    ListTools.insert(tk.END, elemento)
+        #Boton (recordar contraseña)
+        btnRP = tk.Button(cuadroTool, text="Salir", relief="sunken", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14), command=self.ir_a_inicio_sesion)
+        #ubicacion de boton
+        btnRP.place(relx=0.91, rely=0.765, anchor="n")
 
-# Configurar un evento de selección en el ListTools
-ListTools.bind("<<ListboxSelect>>", seleccionar_elemento)
+        # Crear una label para mostrar el elemento seleccionado
+        self.etiqueta = tk.Label(cuadroTool, text="")
+        self.etiqueta.pack()
 
-# Crear una label para mostrar el elemento seleccionado
-etiqueta = tk.Label(ventana, text="")
-etiqueta.pack()
+    def ir_a_reportes(self):
+        # Lógica para ir a la ventana de registro
+        self.root.withdraw()  # Oculta la ventana actual
+        self.app.mostrar_menu()  # Muestra la ventana de registro en la ventana principal
 
-ventana.mainloop()
+    def ir_a_inicio_sesion(self):
+        # Lógica para volver a la ventana de inicio de sesión
+        self.root.withdraw()  # Oculta la ventana actual
+        self.app.show()  # Muestra la ventana de inicio de sesión en la ventana principal
+    
+    def seleccionar_elemento(self, event):
+        seleccion = self.ListTools.get(self.ListTools.curselection())
+        self.etiqueta.config(text=f"{seleccion}")
+
+    def ejecutar_comando(self, event):
+        comando = self.entrada_terminal.get("insert linestart", "insert lineend")
+        self.entrada_terminal.insert(tk.END, f"\n> {comando}\n")
+        self.entrada_terminal.mark_set(tk.INSERT, "insert + 1l linestart")
+        self.entrada_terminal.see(tk.END)
+
+        proceso = subprocess.Popen(comando, shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True, bufsize=1)
+        for linea in proceso.stdout:
+            self.entrada_terminal.insert(tk.END, linea)
+            self.entrada_terminal.mark_set(tk.INSERT, "insert + 1l linestart")
+            self.entrada_terminal.see(tk.END)
+            self.entrada_terminal.update()
+
+if __name__ == "__main__":
+    ventana_registro = tk.Toplevel()
+    ventana_registro.withdraw()
+    ventana_registro.mainloop()
