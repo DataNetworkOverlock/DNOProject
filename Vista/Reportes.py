@@ -15,33 +15,30 @@ def centrar_ventana(ventana):
 def seleccionar_elemento(event):
     # Obtener el índice del elemento seleccionado
     index = ListBox.curselection()
-    
+
     # Obtener el elemento seleccionado
     selected_item = ListBox.get(index)
 
-    # Actualizar una etiqueta para mostrar el elemento seleccionado
-    lblNombreReporte.config(text=f"{selected_item}")
+    # Verificar si el elemento seleccionado es un archivo ".txt"
+    if selected_item in contenido:
+        # Actualizar una etiqueta para mostrar el elemento seleccionado
+        lblNombreReporte.config(text=f"{selected_item}")
 
-    # Actualizar el contenido del Text
-    mostrar_contenido(selected_item)
+        # Actualizar el contenido del Text
+        mostrar_contenido(selected_item)
 
-# Función para actualizar el contenido del Text
+# Función para mostrar el contenido del archivo seleccionado en el Text
 def mostrar_contenido(selected_item):
-    contenido_text = contenido.get(selected_item, '')  # Obtener el contenido del elemento seleccionado
-    text_area.delete('1.0', tk.END)  # Borrar el contenido actual del Text
-    text_area.insert(tk.END, contenido_text)
-
-# Función para manejar la selección en el Listbox
-def seleccionar_archivo(event):
-    # Obtener el elemento seleccionado
-    seleccion = Listbox.get(Listbox.curselection())
-    print(f"Seleccionaste: {seleccion}")
+    if selected_item in contenido:
+        contenido_text = contenido[selected_item]  # Obtener el contenido del archivo seleccionado
+        text_area.delete('1.0', tk.END)  # Borrar el contenido actual del Text
+        text_area.insert(tk.END, contenido_text)
 
 #Ventana
 #se crea el objeto ventana a partir de la clase TK, para hacer una ventana
 ventana = Tk()
 #Titulo de la ventana
-ventana.title("Login")
+ventana.title("Reportes")
 #Tamaño de la ventana
 ventana.geometry("1200x720+0+0")
 # Cambiar el color de fondo a un color hexadecimal
@@ -120,21 +117,44 @@ directorio = "D:/trabajos/Tesis/Repositorio/DNOProject/Recursos/TXTs"
 # Obtener una lista de nombres de archivos en el directorio
 archivos = os.listdir(directorio)
 
-# Agregar los nombres de archivos al Listbox
+# Procesar y agregar los nombres de archivos al ListBox
 for archivo in archivos:
-    ListBox.insert(tk.END, archivo)
+    # Verificar el nombre del archivo
+    if archivo.endswith(".txt"):
+        #Divide el archivo en dos partes (nombre/extension)
+        nombre_sin_extension = os.path.splitext(archivo)[0]
+        #Agrega el el nombre sin extension a la lista
+        ListBox.insert(tk.END, nombre_sin_extension)
 
-# Crear un diccionario con contenido asociado
-contenido = {
-    "Manzana.txt": "Este es el contenido de la manzana.",
-    "Banana": "Este es el contenido de la banana.",
-    "Cereza": "Este es el contenido de la cereza.",
-    "Naranja": "Este es el contenido de la naranja.",
-    "Frambuesa": "Este es el contenido de la frambuesa.",
-    "Uva": "Este es el contenido de la uva."
-}
+# Crear un diccionario para almacenar el contenido de los archivos
+contenido = {}
+
+# Leer el contenido de los archivos y agregarlo al diccionario
+for archivo in archivos:
+    if archivo.endswith(".txt"):
+        nombre_sin_extension = os.path.splitext(archivo)[0]  # Obtener el nombre sin extensión
+        with open(os.path.join(directorio, archivo), "r", encoding="utf-8") as file:
+            contenido[nombre_sin_extension] = file.read()
 
 # Configurar un evento de selección en el ListBox
 ListBox.bind("<<ListboxSelect>>", seleccionar_elemento)
+
+#boton (Exportar a PDF)
+#configuracion de boton
+btnSearch = Button(cuadroV, text="Exportar a PDF", relief="flat", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14))
+#ubicacion de boton
+btnSearch.place(relx=0.85, rely=0.85, anchor="n")
+
+#boton (Regresar a consola)
+#configuracion de boton
+btnSearch = Button(cuadroV, text="Volver a consola", relief="flat", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14))
+#ubicacion de boton
+btnSearch.place(relx=0.125, rely=0.85, anchor="n")
+
+#boton (Deslogueo)
+#configuracion de boton
+btnSearch = Button(cuadroV, text="Salir de cuenta", relief="flat", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14))
+#ubicacion de boton
+btnSearch.place(relx=0.85, rely=0.05, anchor="n")
 
 ventana.mainloop()
