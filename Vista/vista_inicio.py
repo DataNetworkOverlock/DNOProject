@@ -18,7 +18,7 @@ class VistaConfiguracion(tk.Frame):
         # Configurar la ventana principal
         self.root = root
         self.root.geometry("1200x720")
-        # Impedir que la ventana sea redimensionada
+        # Impedir que la ventana sea redimensionada  --
         root.resizable(False, False)
 
         self.centrar_ventana(root)  # Llamada de la función para centrar la ventana
