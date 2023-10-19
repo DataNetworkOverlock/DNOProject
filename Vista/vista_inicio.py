@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import *
+from vista_inicio import VistaInicio
 
 class VistaConfiguracion(tk.Frame):
     def centrar_ventana(self, ventana):
@@ -10,8 +11,9 @@ class VistaConfiguracion(tk.Frame):
         y = (ventana.winfo_screenheight() - alto) // 2
         ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
 
-    def __init__(self, root):
+    def __init__(self, root, inicio):
         super().__init__(root)
+        self.inicio = inicio
 
         # Configurar la ventana principal
         self.root = root
@@ -19,7 +21,7 @@ class VistaConfiguracion(tk.Frame):
         # Impedir que la ventana sea redimensionada
         root.resizable(False, False)
 
-        self.centrar_ventana(ventana)  # Llamada de la función para centrar la ventana
+        self.centrar_ventana(root)  # Llamada de la función para centrar la ventana
 
         # Crear un Frame principal para toda la vista
         frame_principal = tk.Frame(self.root, bg="#26272B")
@@ -34,7 +36,7 @@ class VistaConfiguracion(tk.Frame):
         cuadroV.place(relx=0, rely=0, relwidth=1, relheight=1)
 
         # Label (Subtitulo)
-        lblNombreReporte = tk.Label(cuadroV, text="Inicio")
+        lblNombreReporte = tk.Label(cuadroV, text="Configuración")
         lblNombreReporte.config(fg="#72737A", bg="#1E1F24", font=("Arial", 15))
         lblNombreReporte.place(relx=0.1, rely=0.1)
 
@@ -43,23 +45,19 @@ class VistaConfiguracion(tk.Frame):
         text_area.config(width=95, height=27, bg="#1B1A20", fg="white", relief="solid", borderwidth=0)
         text_area.place(relx=0.1, rely=0.2)
 
-        #boton (atras)
-        #configuracion de boton
-        btnSearch = Button(cuadroV, text="Ir a configuracion", relief="flat", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14), command=self.ir_a_principal)
-        #ubicacion de boton
-        btnSearch.place(relx=0.85, rely=0.05, anchor="n")
+        # Botón (Atrás)
+        btnAtras = Button(cuadroV, text="Volver a inicio", relief="flat", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14), command=self.ir_a_inicio)
+        btnAtras.place(relx=0.85, rely=0.05, anchor="n")
 
-    def ir_a_principal(self):
-        # Cargar la vista principal (asume que "root" es la ventana principal)
-        from vista_configuracion import VistaConfiguracion
-        principal = VistaConfiguracion(self.master)
-        principal.pack()
-        self.destroy()  # Destruir la vista de inicio
-    
+    def ir_a_inicio(self):
+        # Cargar la vista de inicio y pasar la instancia de VistaConfiguracion
+        inicio = VistaInicio(self.master)
+        inicio.pack()
+        self.pack_forget()  # Ocultar la vista de configuración
+
 # Crear la ventana principal
-ventana = tk.Tk()
-app = VistaConfiguracion(ventana)
-app.pack()
-ventana.mainloop()
-
-    
+if __name__ == "__main__":
+    ventana = tk.Tk()
+    app = VistaConfiguracion(ventana, None)
+    app.pack()
+    ventana.mainloop()

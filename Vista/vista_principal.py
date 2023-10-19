@@ -1,8 +1,8 @@
 import tkinter as tk
 from vista_inicio import VistaInicio
+from vista_configuracion import VistaConfiguracion
 
-#funciones
-#Funcion para centrar la ventana
+# Función para centrar la ventana
 def centrar_ventana(ventana):
     ventana.update_idletasks()
     ancho = ventana.winfo_width()
@@ -13,9 +13,9 @@ def centrar_ventana(ventana):
 
 # Crear la ventana principal
 ventana = tk.Tk()
-#Titulo de la ventana
+# Título de la ventana
 ventana.title("Panel")
-#Tamaño de la ventana
+# Tamaño de la ventana
 ventana.geometry("1200x720+0+0")
 # Cambiar el color de fondo a un color hexadecimal
 ventana.configure(bg="#1B1A20")
@@ -24,9 +24,8 @@ ventana.resizable(False, False)
 
 centrar_ventana(ventana)  # Llamada de la función para centrar la ventana
 
-
 # Inicializar la vista de inicio
-inicio = VistaInicio(ventana)
+inicio = VistaInicio(ventana)  # No es necesario pasar "None" aquí
 inicio.pack()
 
 ventana.mainloop()
