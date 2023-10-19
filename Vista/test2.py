@@ -8,7 +8,17 @@ class SigninWindow:
     def __init__(self, root, app):
         self.root = root
         self.app = app
-        self.root.title("Registro")
+        root.title("Registro") #Titulo de la ventana
+        root.geometry("1200x720") #Tamaño de la ventana
+        root.configure(bg="#1B1A20")# Cambiar el color de fondo a un color hexadecimal
+        root.resizable(False, False)# Impedir que la ventana sea redimensionada
+        # Centrar la ventana
+        root.update_idletasks()
+        ancho = root.winfo_width()
+        alto = root.winfo_height()
+        x = (root.winfo_screenwidth() - ancho) // 2
+        y = (root.winfo_screenheight() - alto) // 2
+        root.geometry(f"{ancho}x{alto}+{x}+{y}")
         self.create_widgets()
 
     def create_widgets(self):
