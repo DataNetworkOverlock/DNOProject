@@ -1,5 +1,6 @@
 import tkinter as tk
 import subprocess
+from tkterminal import Terminal
 
 def create_panel_window(root, app):
     panel_window = tk.Toplevel(root)
@@ -46,11 +47,18 @@ class PanelWindow:
         #Ubicacion del Label
         lblOverlook.place(relx=0.5, rely=0.05, anchor="n")
 
+        cuadroCmdInterno = tk.Frame(cuadroCmd)
+        #Ubicacion del frame
+        cuadroCmdInterno.place(relx=0.5, rely=0.2, relwidth=0.85, relheight=0.7, anchor="n")
+
         #Creacion del textArea que muestra resultados de cmd
-        self.entrada_terminal = tk.Text(cuadroCmd)
-        self.entrada_terminal.config(width=95, height=26, bg="black", fg="white", relief="solid", borderwidth=0, font=("Consolas", 12))
-        self.entrada_terminal.pack(anchor="w", padx=25, pady=110)
-        self.entrada_terminal.bind("<Return>", self.ejecutar_comando)
+        terminal = Terminal(cuadroCmdInterno, pady=5, padx=5)
+        terminal.pack(expand=True, fill='both')
+        terminal.configure(bg='#26272B', fg='white', borderwidth=0)
+        #self.entrada_terminal = tk.Text(cuadroCmd)
+        #self.entrada_terminal.config(width=95, height=26, bg="black", fg="white", relief="solid", borderwidth=0, font=("Consolas", 12))
+        #self.entrada_terminal.pack(anchor="w", padx=25, pady=110)
+        #self.entrada_terminal.bind("<Return>", self.ejecutar_comando)
 
         #Frame (Herramientas)
         #Creacion y especificacion decolor
