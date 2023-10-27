@@ -101,11 +101,13 @@ class App:
         from Singin import create_signin_window
         create_signin_window(self.root, self)
 
+#Funcion para abrir ventana Panel.py
     def mostrar_panel(self):
         self.hide()
         from Panel import create_panel_window
         create_panel_window(self.root, self)
     
+#Funcion para abrir ventana Reportes.py
     def mostrar_menu(self):
         self.hide()
         from Reportes import create_menu_window
