@@ -26,10 +26,9 @@ class App:
         #Color del label (transparente)
         lbl.config(bg= "#1B1A20")
         #tipo de letra y tamaño de esta
-        lbl.config(font=("Arial", 40))
+        lbl.config(font=("Lucida Console", 40))
         #Ubicacion del Label
         lbl.place(relx=0.5, rely=0.05, anchor="n")
-
 
         #Frame (cuadro)
         #Creacion y especificacion decolor
@@ -45,15 +44,15 @@ class App:
         #Color del label (transparente)
         lblNU.config(bg= "#26272B")
         #tipo de letra y tamaño de esta
-        lblNU.config(font=("Arial", 15))
+        lblNU.config(font=("Poppins", 14))
         #Ubicacion
-        lblNU.pack(anchor=("w"), padx=50, pady=(100,10))
+        lblNU.pack(anchor=("w"), padx=50, pady=(60,10))
         lblNU.pack()
 
         # TextField (Nombre de usuario)
         TextField_UserName = tk.Entry(cuadro)
         #Configuracion de text fielg
-        TextField_UserName.config(bg="#0D4044", font=("Arial", 12), width=100, fg="white")
+        TextField_UserName.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
         #Ubicacion
         TextField_UserName.pack(anchor=("w"), padx=55, pady=5)
         TextField_UserName.pack()
@@ -66,7 +65,7 @@ class App:
         #Color del label (transparente)
         lblPass.config(bg= "#26272B")
         #tipo de letra y tamaño de esta
-        lblPass.config(font=("Arial", 15))
+        lblPass.config(font=("Poppins", 14))
         #Ubicacion
         lblPass.pack(anchor=("w"), padx=50, pady=(50,10))
         lblPass.pack()
@@ -74,26 +73,26 @@ class App:
         # TextField(Password)
         TextField_Pass = tk.Entry(cuadro)
         #Configuracion de text fielg
-        TextField_Pass.config(bg="#0D4044", font=("Arial", 12), width=100, fg="white")
+        TextField_Pass.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
         #Ubicacion
         TextField_Pass.pack(anchor=("w"), padx=55, pady=5)
         TextField_Pass.pack()
 
         # Botton acceder a panel
-        btn_acceder = tk.Button(cuadro, text="Acceder", relief="sunken", bg="#0E0D13", fg="#ADB2D6", font=("Arial", 14), command=self.mostrar_panel)
+        btn_acceder = tk.Button(cuadro, text="Iniciar sesion", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.mostrar_panel)
         btn_acceder.pack(anchor=("e"), padx=55, pady=50)
         btn_acceder.pack()
 
         #boton (registrarse)
         #configuracion de boton
-        btnR = tk.Button(self.root, text="Registrarse", relief="flat", bg="#1B1A20", fg="#B4BADE", font=("Arial", 14), command = self.mostrar_ventana_registro)
+        btnR = tk.Button(self.root, text="Registrarse", relief="flat", bg="#1B1A20", fg="#B4BADE", font=("Poppins", 14, "italic"), command = self.mostrar_ventana_registro)
         #ubicacion de boton
         btnR.place(relx=0.245, rely=0.825, anchor="n")
 
         #Boton (recordar contraseña)
-        btnRP = tk.Button(self.root, text="¿Olvidaste tu contraseña?", relief="flat", bg="#1B1A20", fg="#B4BADE", font=("Arial", 14))
+        btnRP = tk.Button(self.root, text="¿Olvidaste tu contraseña?", relief="flat", bg="#1B1A20", fg="#B4BADE", font=("Poppins", 14, "italic"))
         #ubicacion de boton
-        btnRP.place(relx=0.4, rely=0.825, anchor="n")
+        btnRP.place(relx=0.425, rely=0.825, anchor="n")
 
     #Funcion para abrir ventana Singin.py
     def mostrar_ventana_registro(self):
