@@ -78,7 +78,7 @@ class MenuWindow:
 
         #boton (Buscar)
         #configuracion de boton
-        btnSearch = tk.Button(cuadroLI, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0)
+        btnSearch = tk.Button(cuadroLI, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0, command=self.actualizar_listbox)
         #ubicacion de boton
         btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
@@ -136,7 +136,7 @@ class MenuWindow:
     def ir_a_panel(self):
         # Lógica para ir a la ventana de registro
         self.root.withdraw()  # Oculta la ventana actual
-        self.app.mostrar_panel()  # Muestra la ventana de registro en la ventana principal
+        self.app.mostrar_panel2()  # Muestra la ventana de registro en la ventana principal
 
     def ir_a_inicio_sesion(self):
         # Lógica para volver a la ventana de inicio de sesión
@@ -160,12 +160,30 @@ class MenuWindow:
             self.TextField_Busqueda.insert(0, 'Filtro')
             self.TextField_Busqueda.config(fg='grey')
 
+    def actualizar_listbox(self):
+        filtro = self.TextField_Busqueda.get()  # Obtener el filtro
+
+        self.ListBoxReportes.delete(0, tk.END)  # Limpiar el ListBox
+
+        # Directorio que se explora
+        directorio = "D:/trabajos/Tesis/Repositorio/DNOProject/Recursos/TXTs"
+
+        # Obtener una lista de nombres de archivos en el directorio
+        archivos = os.listdir(directorio)
+
+        # Procesar y agregar los nombres de archivos al ListBox según el filtro
+        for archivo in archivos:
+            if archivo.lower().endswith(".txt") and filtro.lower() in archivo.lower():
+                nombre_sin_extension = os.path.splitext(archivo)[0]
+                self.ListBoxReportes.insert(tk.END, nombre_sin_extension)
+
     # Función para mostrar el contenido del archivo seleccionado en el Text
     def mostrar_contenido(self, selected_item):
         if selected_item in self.contenido:
             contenido_text = self.contenido[selected_item]  # Obtener el contenido del archivo seleccionado
             self.text_area.delete('1.0', tk.END)  # Borrar el contenido actual del Text
             self.text_area.insert(tk.END, contenido_text)
+
 
 if __name__ == "__main__":
     ventana_registro = tk.Toplevel()

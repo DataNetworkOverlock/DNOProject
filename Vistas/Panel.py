@@ -46,31 +46,6 @@ class PanelWindow:
         #Ubicacion del Label
         lblOverlook.place(relx=0.5, rely=0.05, anchor="n")
 
-        '''
-        #Frame de panel dinamico
-        cuadroCmdInterno = tk.Frame(cuadroCmd, bg='#191A1E')
-        #Ubicacion del frame
-        cuadroCmdInterno.place(relx=0.5, rely=0.2, relwidth=0.85, relheight=0.7, anchor="n")
-
-        # Arreglo con los nombres de los Scripts
-        nombres_scripts = ["Script1", "Script2", "Script3", "Script4", "Script5", "Script6"]
-
-        # Separar los elementos en grupos de tres
-        grupos = [nombres_scripts[i:i + 3] for i in range(0, len(nombres_scripts), 3)]
-
-        for grupo in grupos:
-            marco_grupo = tk.Frame(cuadroCmdInterno, bg='#191A1E')
-            marco_grupo.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
-
-            for nombre in grupo:
-                nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
-                nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
-                label = tk.Label(nuevo_frame, text=nombre, font=("Arial", 12), bg='white')
-                label.pack()
-                button = tk.Button(nuevo_frame, text=f"Botón de {nombre}")
-                button.pack()
-        '''
-
         cuadroCmd2 = tk.Frame(cuadroCmd, bg='#191A1E')
         cuadroCmd2.place(relx=0.5, rely=0.2, relwidth=0.85, relheight=0.7, anchor="n")
 
@@ -85,7 +60,7 @@ class PanelWindow:
         frame_interior = tk.Frame(cuadroCmdInterno, bg='#191A1E')  # Frame interno al Canvas
         cuadroCmdInterno.create_window((0, 0), window=frame_interior, anchor='nw')
 
-        nombres_scripts = ["Script" + str(i) for i in range(1, 25)]  # Ejemplo con 18 scripts
+        nombres_scripts = ["Script" + str(i) for i in range(1, 25)]  # Ejemplo con 25 scripts
 
         grupos = [nombres_scripts[i:i + 3] for i in range(0, len(nombres_scripts), 3)]
 
@@ -96,9 +71,9 @@ class PanelWindow:
             for nombre in grupo:
                 nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
                 nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
-                label = tk.Label(nuevo_frame, text="                  "+nombre+"                  ", font=("Arial", 12), bg='#26272B', fg="white")
+                label = tk.Label(nuevo_frame, text="                  "+nombre+"                  ", font=("Poppins", 12), bg='#26272B', fg="white")
                 label.pack()
-                button = tk.Button(nuevo_frame, text=f"Botón de {nombre}")
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0)
                 button.pack()
 
         # Actualizar el área desplazable del Canvas después de agregar los elementos

@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import messagebox
 
 class App:
     def __init__(self, root):
@@ -14,6 +15,9 @@ class App:
         x = (root.winfo_screenwidth() - ancho) // 2
         y = (root.winfo_screenheight() - alto) // 2
         root.geometry(f"{ancho}x{alto}+{x}+{y}")
+
+        self.TextField_UserName = None
+        self.TextField_Pass = None
 
         self.create_widgets() # Llamado de funcion para crear los widgets
 
@@ -50,12 +54,12 @@ class App:
         lblNU.pack()
 
         # TextField (Nombre de usuario)
-        TextField_UserName = tk.Entry(cuadro)
+        self.TextField_UserName = tk.Entry(cuadro)
         #Configuracion de text fielg
-        TextField_UserName.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
+        self.TextField_UserName.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
         #Ubicacion
-        TextField_UserName.pack(anchor=("w"), padx=55, pady=5)
-        TextField_UserName.pack()
+        self.TextField_UserName.pack(anchor=("w"), padx=55, pady=5)
+        self.TextField_UserName.pack()
 
         #Label (contraseña)
         #Texto del Label
@@ -71,12 +75,12 @@ class App:
         lblPass.pack()
 
         # TextField(Password)
-        TextField_Pass = tk.Entry(cuadro)
+        self.TextField_Pass = tk.Entry(cuadro)
         #Configuracion de text fielg
-        TextField_Pass.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
+        self.TextField_Pass.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
         #Ubicacion
-        TextField_Pass.pack(anchor=("w"), padx=55, pady=5)
-        TextField_Pass.pack()
+        self.TextField_Pass.pack(anchor=("w"), padx=55, pady=5)
+        self.TextField_Pass.pack()
 
         # Botton acceder a panel
         btn_acceder = tk.Button(cuadro, text="Iniciar sesion", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.mostrar_panel)
@@ -102,10 +106,34 @@ class App:
 
 #Funcion para abrir ventana Panel.py
     def mostrar_panel(self):
+        
+        # Valores de usuario y contraseña a verificar
+        correct_username = ["admin", "admin2"]
+        correct_password = "password"
+
+        # Verificar si los valores ingresados coinciden con los correctos
+        if not self.TextField_UserName.get():
+            messagebox.showinfo("Error", "Falta nombre de usuario")
+        else:
+            if not self.TextField_Pass.get():
+                messagebox.showinfo("Error", "Falta contraseña")
+            else:
+                if self.TextField_UserName.get() in [usuario.lower() for usuario in correct_username] and self.TextField_Pass.get() == correct_password:
+                    self.hide()
+                    from Panel import create_panel_window
+                    create_panel_window(self.root, self)
+                else:
+                    messagebox.showinfo("Mensaje de error", "Usuario o contraseña incorrectos")
+
+        # Limpiar los campos después de intentar iniciar sesión
+        self.TextField_UserName.delete(0, tk.END)
+        self.TextField_Pass.delete(0, tk.END)
+
+    def mostrar_panel2(self):
         self.hide()
         from Panel import create_panel_window
         create_panel_window(self.root, self)
-    
+
 #Funcion para abrir ventana Reportes.py
     def mostrar_menu(self):
         self.hide()
