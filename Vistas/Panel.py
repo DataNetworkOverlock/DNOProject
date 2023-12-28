@@ -1,12 +1,13 @@
 import tkinter as tk
 import subprocess
-from tkterminal import Terminal
+from Parametros import Parametros
 
 def create_panel_window(root, app):
     panel_window = tk.Toplevel(root)
     PanelWindow(panel_window, app)
 
 class PanelWindow:
+
     def __init__(self, root, app):
         self.root = root
         self.app = app
@@ -23,6 +24,8 @@ class PanelWindow:
         root.geometry(f"{ancho}x{alto}+{x}+{y}")
 
         self.TextField_Busqueda = None
+        self.cuadroCmdInterno = None
+        self.frame_interior = None
         self.selected_options = []  # Inicializar la lista aquí
 
         self.create_widgets() # Llamado de funcion para crear los widgets
@@ -52,34 +55,56 @@ class PanelWindow:
         scrollbar = tk.Scrollbar(cuadroCmd2, orient=tk.VERTICAL)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        cuadroCmdInterno = tk.Canvas(cuadroCmd2, bg="#191A1E", yscrollcommand=scrollbar.set)
-        cuadroCmdInterno.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
+        self.cuadroCmdInterno = tk.Canvas(cuadroCmd2, bg="#191A1E", yscrollcommand=scrollbar.set)
+        self.cuadroCmdInterno.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
-        scrollbar.config(command=cuadroCmdInterno.yview)
+        scrollbar.config(command=self.cuadroCmdInterno.yview)
 
-        frame_interior = tk.Frame(cuadroCmdInterno, bg='#191A1E')  # Frame interno al Canvas
-        cuadroCmdInterno.create_window((0, 0), window=frame_interior, anchor='nw')
+        self.frame_interior = tk.Frame(self.cuadroCmdInterno, bg='#191A1E')  # Frame interno al Canvas
+        self.cuadroCmdInterno.create_window((0, 0), window=self.frame_interior, anchor='nw')
 
-        nombres_scripts = ["Script" + str(i) for i in range(1, 25)]  # Ejemplo con 25 scripts
+        nombres_scripts = ["Script " + str(i) for i in range(1, 21)]  # Ejemplo con 20 scripts
+        etiquetas_scripts = ["John The Ripper","John The Ripper","John The Ripper","John The Ripper","John The Ripper", 
+                             "Nikto","Nikto","Nikto","Nikto","Nikto", "Nmap", "Nmap","Nmap","Nmap","Nmap", "SQLMap"
+                             ,"SQLMap","SQLMap","SQLMap","SQLMap"] # Ejemplo con 20 scripts
+        parametros_scripts = ["1","1","2","1","3","1","1","2","1","3","1","1","2","1","3","1","1","2","1","3"]  # Ejemplo con 20 parámetros
+        #descripcion_Scripts = ["A1","B1","C2","D1","E3","F1","G1","H2","I1","J3","K1","L1","M2","N1","O3","P1","Q1","R2","S1","T3"]  # Ejemplo con 20 parámetros
+        # Combinar los tres arreglos en una matriz
+        scripts_info = [{"nombre": nombre, "etiqueta": etiqueta, "parametro": parametro} for nombre, etiqueta, parametro in zip(nombres_scripts, etiquetas_scripts * (len(nombres_scripts) // len(etiquetas_scripts)), parametros_scripts)]
 
-        grupos = [nombres_scripts[i:i + 3] for i in range(0, len(nombres_scripts), 3)]
+        # Agregamos una variable para almacenar los scripts originales sin filtrar
+        self.scripts_info_original = scripts_info.copy()
+
+        grupos = [scripts_info[i:i + 3] for i in range(0, len(scripts_info), 3)]
 
         for grupo in grupos:
-            marco_grupo = tk.Frame(frame_interior, bg='#191A1E')
+            marco_grupo = tk.Frame(self.frame_interior, bg='#191A1E')
             marco_grupo.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
 
-            for nombre in grupo:
+            for script_info in grupo:
+                nombre = script_info["nombre"]
+                etiqueta = script_info["etiqueta"]
+                parametro = script_info["parametro"]
+
                 nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
                 nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
-                label = tk.Label(nuevo_frame, text="                  "+nombre+"                  ", font=("Poppins", 12), bg='#26272B', fg="white")
-                label.pack()
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0)
-                button.pack()
 
-        # Actualizar el área desplazable del Canvas después de agregar los elementos
-        cuadroCmdInterno.update_idletasks()
-        cuadroCmdInterno.configure(scrollregion=cuadroCmdInterno.bbox("all"))
+                label_nombre = tk.Label(nuevo_frame, text=f"                  {nombre}                  ", font=("Poppins", 12), bg='#26272B', fg="white")
+                label_nombre.pack()
+
+                label_etiqueta = tk.Label(nuevo_frame, text=f"                  {etiqueta}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                label_etiqueta.pack()
+
+                label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                label_parametro.pack()
+
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre: self.abrir_parametros(n))
+                button.pack()
         
+        # Actualizar el área desplazable del Canvas después de agregar los elementos
+        self.cuadroCmdInterno.update_idletasks()
+        self.cuadroCmdInterno.configure(scrollregion=self.cuadroCmdInterno.bbox("all"))
+
         #Frame (Scripts)
         #Creacion y especificacion decolor
         cuadroTool = tk.Frame(self.root, bg="#1B1A20")
@@ -116,12 +141,12 @@ class PanelWindow:
 
         #boton (Buscar)
         #configuracion de boton
-        btnSearch = tk.Button(cuadroEtiquetas, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0)
+        btnSearch = tk.Button(cuadroEtiquetas, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0, command=self.buscar_scripts_por_nombre)
         #ubicacion de boton
         btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
         # Lista para los checkboxes
-        etiquetas = ["Etiqueta 1", "Etiqueta 2", "Etiqueta 3"]
+        etiquetas = ["John The Ripper", "Nikto", "Nmap", "SQLMap"]
 
         for i, etiqueta in enumerate(etiquetas):
             var = tk.IntVar()
@@ -136,14 +161,65 @@ class PanelWindow:
         btnR.place(relx=0.275, rely=0.875, anchor="n")
 
         #Boton (Abrir CLI)
-        btnCLI = tk.Button(cuadroTool, text="Abrir CLI", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 12),border=0)
+        btnCLI = tk.Button(cuadroTool, text="Filtrar por etiqueta", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 12),border=0, command=self.buscar_scripts)
         #ubicacion de boton
-        btnCLI.place(relx=0.7, rely=0.875, anchor="n")
+        btnCLI.place(relx=0.625, rely=0.875, anchor="n")
 
         #Boton (Volver a Login)
         btnRP = tk.Button(cuadroTool, text="Salir", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 12),border=0, command=self.ir_a_inicio_sesion)
         #ubicacion de boton
         btnRP.place(relx=0.89, rely=0.875, anchor="n")
+
+    def buscar_scripts(self):
+        etiquetas_seleccionadas = [etiqueta for etiqueta, var in self.selected_options if var.get() == 1]
+        scripts_filtrados = [script for script in self.scripts_info_original if script["etiqueta"] in etiquetas_seleccionadas]
+        self.actualizar_scrollbar(scripts_filtrados)
+    
+    def buscar_scripts_por_nombre(self):
+        nombre_a_buscar = self.TextField_Busqueda.get()
+        scripts_filtrados = [script for script in self.scripts_info_original if nombre_a_buscar.lower() in script["nombre"].lower()]
+        self.actualizar_scrollbar(scripts_filtrados)
+
+    def actualizar_scrollbar(self, scripts_filtrados):
+        for widget in self.frame_interior.winfo_children():
+            widget.destroy()
+
+        grupos_filtrados = [scripts_filtrados[i:i + 3] for i in range(0, len(scripts_filtrados), 3)]
+
+        for grupo in grupos_filtrados:
+            marco_grupo = tk.Frame(self.frame_interior, bg='#191A1E')
+            marco_grupo.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
+
+            for script_info in grupo:
+                nombre = script_info["nombre"]
+                etiqueta = script_info["etiqueta"]
+                parametro = script_info["parametro"]
+
+                nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
+                nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
+
+                label_nombre = tk.Label(nuevo_frame, text=f"                  {nombre}                  ", font=("Poppins", 12), bg='#26272B', fg="white")
+                label_nombre.pack()
+
+                label_etiqueta = tk.Label(nuevo_frame, text=f"                  {etiqueta}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                label_etiqueta.pack()
+
+                label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                label_parametro.pack()
+
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre: self.abrir_parametros(n))
+                button.pack()
+
+        self.cuadroCmdInterno.update_idletasks()
+        self.cuadroCmdInterno.configure(scrollregion=self.cuadroCmdInterno.bbox("all"))
+
+
+    # ...
+    def abrir_parametros(self, nombre_script):
+        # Crea una instancia de la clase Parametros y pasa el nombre del script
+        parametros_window = Parametros(self.root, nombre_script)
+        # Mostrar la ventana de parámetros
+        parametros_window.ventana.deiconify()
 
     def ir_a_reportes(self):
         # Lógica para ir a la ventana de registro

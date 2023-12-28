@@ -181,12 +181,12 @@ class SigninWindow:
         # Lógica de registro de usuario
         contador_registro = 0
 
-        #Condicion de nombre de usuario
-        Usuarios_Existentes = ["u1", "u2", "u3", "u4"]
-
-        if not self.TextField_UserName.get(): # Verifica si el campo de usuario está vacío
-             messagebox.showinfo("Error", "El campo de usuario está vacío. Ingrese un nombre de usuario.")
+        if not self.TextField_UserName.get() or not self.TextField_Pass.get() or not self.TextField_Pass2.get() or not self.TextField_Ask.get(): # Verifica si los campos estan vacío
+             messagebox.showinfo("Error", "Debe de llenar todos los campos")
         else:
+
+            #Condicion de nombre de usuario
+            Usuarios_Existentes = ["u1", "u2", "u3", "u4"]
             if self.TextField_UserName.get() in [usuario.lower() for usuario in Usuarios_Existentes]:
                 self.TextField_UserName.config(fg="red")
                 messagebox.showinfo("Error", "El nombre de usuario ya existe en la base de datos, elija uno diferente")
@@ -195,10 +195,7 @@ class SigninWindow:
                 self.TextField_UserName.config(fg="green")
                 contador_registro += 1
 
-        #Condicion de seguridad de contraseña
-        if not self.TextField_Pass.get(): # Verifica si el campo de contraseña está vacío
-             messagebox.showinfo("Error", "El campo de contraseña está vacío. Ingrese una contraseña.")
-        else:
+            #Condicion de seguridad de contraseña
             if len(self.TextField_Pass.get()) <= 10:
                 self.TextField_Pass.config(fg="red")
                 messagebox.showinfo("Error", "Contraseña insegura")
@@ -207,10 +204,7 @@ class SigninWindow:
                 self.TextField_Pass.config(fg="green")
                 contador_registro += 1
 
-        #Condicion de confirmacion de contraseñas
-        if not self.TextField_Pass2.get(): # Verifica si el campo de confirmacion de contraseña está vacío
-             messagebox.showinfo("Error", "El campo de confirmacion de contraseña está vacío.")
-        else:
+            #Condicion de confirmacion de contraseñas
             if self.TextField_Pass.get() == self.TextField_Pass2.get():
                 self.TextField_Pass2.config(fg="green")
                 contador_registro += 1
@@ -220,10 +214,7 @@ class SigninWindow:
                 self.TextField_Pass2.delete(0, tk.END)
                 contador_registro = 0
 
-        #condicion de pregunta de seguridad
-        if not self.TextField_Ask.get(): # Verifica si el campo de pregunta de seguridad está vacío
-            messagebox.showinfo("Error", "El campo de pregutna de seguridad está vacío.")
-        else:
+            #condicion de pregunta de seguridad
             if not self.TextField_Answ.get(): # Verifica si el campo de respuesta está vacío
                 messagebox.showinfo("Error", "El campo de respuesta está vacío.")
             else:
