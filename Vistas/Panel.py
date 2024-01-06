@@ -98,7 +98,7 @@ class PanelWindow:
                 label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre: self.abrir_parametros(n))
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro: self.abrir_parametros(n, p))
                 button.pack()
         
         # Actualizar el área desplazable del Canvas después de agregar los elementos
@@ -207,17 +207,16 @@ class PanelWindow:
                 label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre: self.abrir_parametros(n))
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro: self.abrir_parametros(n, p))
                 button.pack()
 
         self.cuadroCmdInterno.update_idletasks()
         self.cuadroCmdInterno.configure(scrollregion=self.cuadroCmdInterno.bbox("all"))
-
-
+        
     # ...
-    def abrir_parametros(self, nombre_script):
+    def abrir_parametros(self, nombre_script, parametros_scripts):
         # Crea una instancia de la clase Parametros y pasa el nombre del script
-        parametros_window = Parametros(self.root, nombre_script)
+        parametros_window = Parametros(self.root, nombre_script, parametros_scripts)
         # Mostrar la ventana de parámetros
         parametros_window.ventana.deiconify()
 
