@@ -1,10 +1,11 @@
 import tkinter as tk
 
 class Parametros:
-    def __init__(self, root, nombre_script):
+    def __init__(self, root, nombre_script, parametros_scripts):
         # Inicialización de la clase
         self.root = root
         self.nombre_script = nombre_script
+        self.parametros_scripts = parametros_scripts
         self.create_widgets()
 
     def create_widgets(self):
@@ -31,7 +32,7 @@ class Parametros:
         lblDescrp.pack(anchor="w", padx=25, pady=(5, 10))
 
         # Etiqueta y entrada para el Contenido de la descripcion
-        lblDescrp = tk.Label(cuadro_Descripcion, text="Descripcion del script")
+        lblDescrp = tk.Label(cuadro_Descripcion, text=f"Descripcion: {self.parametros_scripts}")
         lblDescrp.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 14))
         lblDescrp.pack(anchor="w", padx=25, pady=(5, 10))
 
@@ -44,8 +45,7 @@ class Parametros:
         lblP1.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 14))
         lblP1.pack(anchor="w", padx=40, pady=(25, 10))
 
-        TextField_P1 = tk.Entry(cuadro)
-        TextField_P1.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
+        TextField_P1 = tk.Entry(cuadro, bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
         TextField_P1.pack(anchor="w", padx=40, pady=3)
 
         # Etiqueta y entrada para el segundo parámetro
@@ -53,8 +53,7 @@ class Parametros:
         lblP2.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 14))
         lblP2.pack(anchor="w", padx=40, pady=(10))
 
-        TextField_P2 = tk.Entry(cuadro)
-        TextField_P2.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
+        TextField_P2 = tk.Entry(cuadro, bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
         TextField_P2.pack(anchor="w", padx=40, pady=3)
 
         # Etiqueta y entrada para el tercer parámetro
@@ -62,9 +61,17 @@ class Parametros:
         lblP3.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 14))
         lblP3.pack(anchor="w", padx=40, pady=(10))
 
-        TextField_P3 = tk.Entry(cuadro)
-        TextField_P3.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
+        TextField_P3 = tk.Entry(cuadro, bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
         TextField_P3.pack(anchor="w", padx=40, pady=3)
+
+        bloqueo = int(self.parametros_scripts)
+
+        if bloqueo == 1:
+            TextField_P2.config(state='readonly', bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
+            TextField_P3.config(state='readonly', bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
+
+        if bloqueo == 2:
+            TextField_P3.config(state='readonly', bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=150, fg="white")
 
         # Botón para ejecutar el script
         btn_acceder = tk.Button(self.ventana, text="Ejecutar Script", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14), border=0)
