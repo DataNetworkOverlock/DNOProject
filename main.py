@@ -1,5 +1,5 @@
 import tkinter as tk
-from Login import App
+from Vistas.Login import App
 
 if __name__ == "__main__":
     root = tk.Tk()

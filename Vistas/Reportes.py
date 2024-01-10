@@ -88,7 +88,7 @@ class MenuWindow:
         self.ListBoxReportes.place(x=10, y=60, width=260, height=500)
 
         # Directorio que se explora
-        directorio = "D:/trabajos/Tesis/Repositorio/DNOProject/Recursos/TXTs"
+        directorio = "Recursos/TXTs"
 
         # Obtener una lista de nombres de archivos en el directorio
         archivos = os.listdir(directorio)
