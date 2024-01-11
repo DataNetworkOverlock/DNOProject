@@ -1,16 +1,17 @@
 import tkinter as tk
 import subprocess
-from Parametros import Parametros
+from Vistas.Parametros import Parametros
 
-def create_panel_window(root, app):
+def create_panel_window(root, app, credentials):
     panel_window = tk.Toplevel(root)
-    PanelWindow(panel_window, app)
+    PanelWindow(panel_window, app, credentials)
 
 class PanelWindow:
 
-    def __init__(self, root, app):
+    def __init__(self, root, app, credentials):
         self.root = root
         self.app = app
+        self.credentials = credentials
         root.title("Inicio de Sesión") #Titulo de la ventana
         root.geometry("1200x720") #Tamaño de la ventana
         root.configure(bg="#1B1A20")# Cambiar el color de fondo a un color hexadecimal
