@@ -157,12 +157,12 @@ class App:
 
     def mostrar_panel2(self):
         self.hide()
-        create_panel_window(self.root, self)
+        create_panel_window(self.root, self, self.credentials)
 
     #Funcion para abrir ventana Reportes.py
     def mostrar_menu(self):
         self.hide()
-        create_menu_window(self.root, self)
+        create_menu_window(self.root, self, self.credentials)
 
     def hide(self):
         self.root.withdraw()
