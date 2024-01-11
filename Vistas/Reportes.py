@@ -1,14 +1,15 @@
 import tkinter as tk
 import os
 
-def create_menu_window(root, app):
+def create_menu_window(root, app, credentials):
     menu_window = tk.Toplevel(root)
-    MenuWindow(menu_window, app)
+    MenuWindow(menu_window, app, credentials)
 
 class MenuWindow:
-    def __init__(self, root, app):
+    def __init__(self, root, app, credentials):
         self.root = root
         self.app = app
+        self.credentials = credentials
         root.title("menu") #Titulo de la ventana
         root.geometry("1200x720") #Tamaño de la ventana
         root.configure(bg="#1B1A20")# Cambiar el color de fondo a un color hexadecimal
@@ -88,7 +89,7 @@ class MenuWindow:
         self.ListBoxReportes.place(x=10, y=60, width=260, height=500)
 
         # Directorio que se explora
-        directorio = "D:/trabajos/Tesis/Repositorio/DNOProject/Recursos/TXTs"
+        directorio = "Recursos/TXTs"
 
         # Obtener una lista de nombres de archivos en el directorio
         archivos = os.listdir(directorio)
@@ -166,7 +167,7 @@ class MenuWindow:
         self.ListBoxReportes.delete(0, tk.END)  # Limpiar el ListBox
 
         # Directorio que se explora
-        directorio = "D:/trabajos/Tesis/Repositorio/DNOProject/Recursos/TXTs"
+        directorio = "Recursos/TXTs"
 
         # Obtener una lista de nombres de archivos en el directorio
         archivos = os.listdir(directorio)

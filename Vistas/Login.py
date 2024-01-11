@@ -1,5 +1,10 @@
 import tkinter as tk
 from tkinter import messagebox
+from utils.usuarios import Usuarios
+from Vistas.Panel import create_panel_window
+from Vistas.Reportes import create_menu_window
+from Vistas.Singin import create_signin_window
+
 
 class App:
     def __init__(self, root):
@@ -18,6 +23,8 @@ class App:
 
         self.TextField_UserName = None
         self.TextField_Pass = None
+
+        self.users = Usuarios()
 
         self.create_widgets() # Llamado de funcion para crear los widgets
 
@@ -101,10 +108,9 @@ class App:
     #Funcion para abrir ventana Singin.py
     def mostrar_ventana_registro(self):
         self.hide()
-        from Singin import create_signin_window
         create_signin_window(self.root, self)
 
-#Funcion para abrir ventana Panel.py
+    #Funcion para abrir ventana Panel.py
     def mostrar_panel(self):
         
         # Valores de usuario y contraseña a verificar
@@ -112,7 +118,7 @@ class App:
         correct_password = "password"
 
         # Verificar si los valores ingresados coinciden con los correctos
-        if not self.TextField_UserName.get():
+        """ if not self.TextField_UserName.get():
             messagebox.showinfo("Error", "Falta nombre de usuario")
         else:
             if not self.TextField_Pass.get():
@@ -120,10 +126,30 @@ class App:
             else:
                 if self.TextField_UserName.get() in [usuario.lower() for usuario in correct_username] and self.TextField_Pass.get() == correct_password:
                     self.hide()
-                    from Panel import create_panel_window
                     create_panel_window(self.root, self)
                 else:
-                    messagebox.showinfo("Mensaje de error", "Usuario o contraseña incorrectos")
+                    messagebox.showinfo("Mensaje de error", "Usuario o contraseña incorrectos") """
+        
+        username = self.TextField_UserName.get()
+        password = self.TextField_Pass.get()
+
+        if not username or not password:
+            messagebox.showinfo("Error", "Debe llenar todos los campos")
+        
+        payload = {
+            "username": username,
+            "password": password
+        }
+        
+        login = self.users.login(payload)
+        
+        if "status" in login:
+            message = "Error " + str(login["status"]) + ". " + str(login["message"])
+            messagebox.showinfo("Error", message)
+        else:
+            self.credentials = login
+            self.hide()
+            create_panel_window(self.root, self, self.credentials)
 
         # Limpiar los campos después de intentar iniciar sesión
         self.TextField_UserName.delete(0, tk.END)
@@ -131,14 +157,12 @@ class App:
 
     def mostrar_panel2(self):
         self.hide()
-        from Panel import create_panel_window
-        create_panel_window(self.root, self)
+        create_panel_window(self.root, self, self.credentials)
 
-#Funcion para abrir ventana Reportes.py
+    #Funcion para abrir ventana Reportes.py
     def mostrar_menu(self):
         self.hide()
-        from Reportes import create_menu_window
-        create_menu_window(self.root, self)
+        create_menu_window(self.root, self, self.credentials)
 
     def hide(self):
         self.root.withdraw()
