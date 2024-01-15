@@ -118,18 +118,7 @@ class App:
         correct_password = "password"
 
         # Verificar si los valores ingresados coinciden con los correctos
-        """ if not self.TextField_UserName.get():
-            messagebox.showinfo("Error", "Falta nombre de usuario")
-        else:
-            if not self.TextField_Pass.get():
-                messagebox.showinfo("Error", "Falta contraseña")
-            else:
-                if self.TextField_UserName.get() in [usuario.lower() for usuario in correct_username] and self.TextField_Pass.get() == correct_password:
-                    self.hide()
-                    create_panel_window(self.root, self)
-                else:
-                    messagebox.showinfo("Mensaje de error", "Usuario o contraseña incorrectos") """
-        
+       
         username = self.TextField_UserName.get()
         password = self.TextField_Pass.get()
 
@@ -169,8 +158,3 @@ class App:
 
     def show(self):
         self.root.deiconify()
-
-if __name__ == "__main__":
-    ventana_login = tk.Tk()
-    app = App(ventana_login)
-    ventana_login.mainloop()

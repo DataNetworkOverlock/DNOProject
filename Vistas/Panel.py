@@ -69,9 +69,15 @@ class PanelWindow:
                              "Nikto","Nikto","Nikto","Nikto","Nikto", "Nmap", "Nmap","Nmap","Nmap","Nmap", "SQLMap"
                              ,"SQLMap","SQLMap","SQLMap","SQLMap"] # Ejemplo con 20 scripts
         parametros_scripts = ["1","1","2","1","3","1","1","2","1","3","1","1","2","1","3","1","1","2","1","3"]  # Ejemplo con 20 parámetros
-        #descripcion_Scripts = ["A1","B1","C2","D1","E3","F1","G1","H2","I1","J3","K1","L1","M2","N1","O3","P1","Q1","R2","S1","T3"]  # Ejemplo con 20 parámetros
+        descripcion_Scripts = ["A1","B1","C2","D1","E3","F1","G1","H2","I1","J3","K1","L1","M2","N1","O3","P1","Q1","R2","S1","T3"]  # Ejemplo con 20 parámetros
         # Combinar los tres arreglos en una matriz
-        scripts_info = [{"nombre": nombre, "etiqueta": etiqueta, "parametro": parametro} for nombre, etiqueta, parametro in zip(nombres_scripts, etiquetas_scripts * (len(nombres_scripts) // len(etiquetas_scripts)), parametros_scripts)]
+        scripts_info = [
+            {"nombre": nombre, "etiqueta": etiqueta, "parametro": parametro, "descripcion": descripcion}
+            for nombre, etiqueta, parametro, descripcion in zip(
+                nombres_scripts, etiquetas_scripts * (len(nombres_scripts) // len(etiquetas_scripts)),
+                parametros_scripts, descripcion_Scripts
+            )
+]
 
         # Agregamos una variable para almacenar los scripts originales sin filtrar
         self.scripts_info_original = scripts_info.copy()
@@ -86,6 +92,7 @@ class PanelWindow:
                 nombre = script_info["nombre"]
                 etiqueta = script_info["etiqueta"]
                 parametro = script_info["parametro"]
+                descripcion = script_info["descripcion"] 
 
                 nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
                 nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
@@ -99,7 +106,7 @@ class PanelWindow:
                 label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro: self.abrir_parametros(n, p))
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro, d=descripcion: self.abrir_parametros(n, p, d))
                 button.pack()
         
         # Actualizar el área desplazable del Canvas después de agregar los elementos
@@ -195,6 +202,7 @@ class PanelWindow:
                 nombre = script_info["nombre"]
                 etiqueta = script_info["etiqueta"]
                 parametro = script_info["parametro"]
+                descripcion = script_info["descripcion"] 
 
                 nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
                 nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
@@ -208,16 +216,16 @@ class PanelWindow:
                 label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro: self.abrir_parametros(n, p))
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro, d=descripcion: self.abrir_parametros(n, p, d))
                 button.pack()
 
         self.cuadroCmdInterno.update_idletasks()
         self.cuadroCmdInterno.configure(scrollregion=self.cuadroCmdInterno.bbox("all"))
         
     # ...
-    def abrir_parametros(self, nombre_script, parametros_scripts):
+    def abrir_parametros(self, nombre_script, parametros_scripts, descripcion_Scripts):
         # Crea una instancia de la clase Parametros y pasa el nombre del script
-        parametros_window = Parametros(self.root, nombre_script, parametros_scripts)
+        parametros_window = Parametros(self.root, nombre_script, parametros_scripts, descripcion_Scripts)
         # Mostrar la ventana de parámetros
         parametros_window.ventana.deiconify()
 
@@ -248,8 +256,3 @@ class PanelWindow:
             label, state = option  # Corregir desempaquetado
             if state == var.get():  # Revisar si el estado es igual al valor de la variable
                 print(f"Opción seleccionada: {label if state == 1 else None}")
-
-if __name__ == "__main__":
-    ventana_registro = tk.Toplevel()
-    ventana_registro.withdraw()
-    ventana_registro.mainloop()
