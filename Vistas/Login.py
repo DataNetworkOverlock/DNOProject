@@ -113,12 +113,7 @@ class App:
     #Funcion para abrir ventana Panel.py
     def mostrar_panel(self):
         
-        # Valores de usuario y contraseña a verificar
-        correct_username = ["admin", "admin2"]
-        correct_password = "password"
-
         # Verificar si los valores ingresados coinciden con los correctos
-       
         username = self.TextField_UserName.get()
         password = self.TextField_Pass.get()
 
