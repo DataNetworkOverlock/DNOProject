@@ -1,11 +1,12 @@
 import tkinter as tk
 
 class Parametros:
-    def __init__(self, root, nombre_script, parametros_scripts):
+    def __init__(self, root, nombre_script, parametros_scripts, descripcion_Scripts):
         # Inicialización de la clase
         self.root = root
         self.nombre_script = nombre_script
         self.parametros_scripts = parametros_scripts
+        self.descripcion_Scripts = descripcion_Scripts
         self.create_widgets()
 
     def create_widgets(self):
@@ -32,7 +33,7 @@ class Parametros:
         lblDescrp.pack(anchor="w", padx=25, pady=(5, 10))
 
         # Etiqueta y entrada para el Contenido de la descripcion
-        lblDescrp = tk.Label(cuadro_Descripcion, text=f"Descripcion: {self.parametros_scripts}")
+        lblDescrp = tk.Label(cuadro_Descripcion, text=f"Descripcion: {self.descripcion_Scripts}")
         lblDescrp.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 14))
         lblDescrp.pack(anchor="w", padx=25, pady=(5, 10))
 
@@ -85,9 +86,3 @@ class Parametros:
         x = (self.ventana.winfo_screenwidth() - ancho) // 2
         y = (self.ventana.winfo_screenheight() - alto) // 2
         self.ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
-
-# Para probar el módulo por separado
-if __name__ == "__main__":
-    ventana_parametros = tk.Tk()
-    parametros = Parametros(ventana_parametros, "Script1")  # Debes proporcionar el nombre del script
-    ventana_parametros.mainloop()

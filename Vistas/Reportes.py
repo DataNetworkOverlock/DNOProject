@@ -184,11 +184,4 @@ class MenuWindow:
             contenido_text = self.contenido[selected_item]  # Obtener el contenido del archivo seleccionado
             self.text_area.delete('1.0', tk.END)  # Borrar el contenido actual del Text
             self.text_area.insert(tk.END, contenido_text)
-
-
-if __name__ == "__main__":
-    ventana_registro = tk.Toplevel()
-    ventana_registro.withdraw()
-    ventana_registro.mainloop()
-
     

@@ -244,8 +244,3 @@ class SigninWindow:
     def volver_al_inicio(self):
         self.root.withdraw()
         self.app.show()
-
-if __name__ == "__main__":
-    ventana_registro = tk.Toplevel()
-    ventana_registro.withdraw()
-    ventana_registro.mainloop()
