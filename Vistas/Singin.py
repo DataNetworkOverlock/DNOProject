@@ -1,5 +1,6 @@
 import tkinter as tk
 from tkinter import messagebox
+from utils.usuarios import Usuarios
 
 def create_signin_window(root, app):
     signin_window = tk.Toplevel(root)
@@ -20,6 +21,7 @@ class SigninWindow:
         x = (root.winfo_screenwidth() - ancho) // 2
         y = (root.winfo_screenheight() - alto) // 2
         root.geometry(f"{ancho}x{alto}+{x}+{y}")
+        self.usuarios = Usuarios()
         self.create_widgets()
 
     def create_widgets(self):
@@ -55,12 +57,12 @@ class SigninWindow:
         lblNU.pack()
 
         # TextField (Nombre de usuario)
-        TextField_User = tk.Entry(cuadro)
+        self.TextField_User = tk.Entry(cuadro)
         #Configuracion de text fielg
-        TextField_User.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
+        self.TextField_User.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=100, fg="white")
         #Ubicacion
-        TextField_User.pack(anchor=("w"), padx=55, pady=0)
-        TextField_User.pack()
+        self.TextField_User.pack(anchor=("w"), padx=55, pady=0)
+        self.TextField_User.pack()
 
         #Label (Nombre de usuario)
         #Texto del Label
@@ -181,13 +183,20 @@ class SigninWindow:
         # Lógica de registro de usuario
         contador_registro = 0
 
-        if not self.TextField_UserName.get() or not self.TextField_Pass.get() or not self.TextField_Pass2.get() or not self.TextField_Ask.get(): # Verifica si los campos estan vacío
+        name = self.TextField_User.get()
+        username = self.TextField_UserName.get()
+        password = self.TextField_Pass.get()
+        confirm_password = self.TextField_Pass2.get()
+        question = self.TextField_Ask.get()
+        answer = self.TextField_Answ.get()
+
+        if not username or not password or not confirm_password or not question: # Verifica si los campos estan vacío
              messagebox.showinfo("Error", "Debe de llenar todos los campos")
         else:
 
             #Condicion de nombre de usuario
             Usuarios_Existentes = ["u1", "u2", "u3", "u4"]
-            if self.TextField_UserName.get() in [usuario.lower() for usuario in Usuarios_Existentes]:
+            if username in [usuario.lower() for usuario in Usuarios_Existentes]:
                 self.TextField_UserName.config(fg="red")
                 messagebox.showinfo("Error", "El nombre de usuario ya existe en la base de datos, elija uno diferente")
                 contador_registro = 0
@@ -196,7 +205,7 @@ class SigninWindow:
                 contador_registro += 1
 
             #Condicion de seguridad de contraseña
-            if len(self.TextField_Pass.get()) <= 10:
+            if len(password) <= 10:
                 self.TextField_Pass.config(fg="red")
                 messagebox.showinfo("Error", "Contraseña insegura")
                 contador_registro = 0
@@ -205,7 +214,7 @@ class SigninWindow:
                 contador_registro += 1
 
             #Condicion de confirmacion de contraseñas
-            if self.TextField_Pass.get() == self.TextField_Pass2.get():
+            if password == confirm_password:
                 self.TextField_Pass2.config(fg="green")
                 contador_registro += 1
             else:
@@ -215,16 +224,16 @@ class SigninWindow:
                 contador_registro = 0
 
             #condicion de pregunta de seguridad
-            if not self.TextField_Answ.get(): # Verifica si el campo de respuesta está vacío
+            if not answer: # Verifica si el campo de respuesta está vacío
                 messagebox.showinfo("Error", "El campo de respuesta está vacío.")
             else:
-                if self.TextField_Answ.get().lower() == "si" or self.TextField_Answ.get().lower() == "no":
+                if answer.lower() == "si" or answer.lower() == "no":
                     messagebox.showinfo("Error", "La pregunta no puede ser respondida con un 'Si' o 'No'.")
                     self.TextField_Answ.config(fg="red")
                     contador_registro = 0
                 else:
-                    if len(self.TextField_Answ.get()) <= 6:
-                        messagebox.showinfo("Error", "La respuesta es demaciado corta.")
+                    if len(answer) <= 6:
+                        messagebox.showinfo("Error", "La respuesta es demasiado corta.")
                         self.TextField_Answ.config(fg="red")
                         contador_registro = 0
                     else:
@@ -234,13 +243,25 @@ class SigninWindow:
         if contador_registro <= 3:
             messagebox.showinfo("Error", "Fallo en el registro")
         else:
-            messagebox.showinfo("Exitoso", "Registro exitoso\n" + f"usuario: {self.TextField_UserName.get()}" + " sera redirigido al login")
-            self.TextField_UserName.delete(0, tk.END)
-            self.TextField_Pass.delete(0, tk.END)
-            self.TextField_Pass2.delete(0, tk.END)
-            self.TextField_Ask.delete(0, tk.END)
-            self.TextField_Answ.delete(0, tk.END)
-            self.volver_al_inicio()
+            payload = {
+                'name': name,
+                'username': username,
+                'password': password,
+                'question': question,
+                'answer': answer
+            }
+            usuario_creado = self.usuarios.create_user(payload)
+            if "status" in usuario_creado:
+                message = "Error " + str(usuario_creado["status"]) + ". " + str(usuario_creado["message"])
+                messagebox.showinfo("Error", message)
+            else:
+                messagebox.showinfo("Exitoso", "Registro exitoso\n" + f"usuario: {username}" + " sera redirigido al login")
+                self.TextField_UserName.delete(0, tk.END)
+                self.TextField_Pass.delete(0, tk.END)
+                self.TextField_Pass2.delete(0, tk.END)
+                self.TextField_Ask.delete(0, tk.END)
+                self.TextField_Answ.delete(0, tk.END)
+                self.volver_al_inicio()
     def volver_al_inicio(self):
         self.root.withdraw()
         self.app.show()
