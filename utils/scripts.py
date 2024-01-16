@@ -1,15 +1,10 @@
-import requests
+from utils.http_request import HttpRequest
 
-class Scripts:
+class Scripts(HttpRequest):
+
     def __init__(self, token):
-        self.token = token
-        self.base_url = 'http://datanetworkoverlock.live/scripts'
-        self.headers = {
-            'Content-Type': 'application/json',
-            'authorization': token
-        }
+        super().__init__(token)
     
     def get_scripts(self):
-        url = self.base_url
-        response = requests.request('GET', url, headers=self.headers)
-        return response.json();
+        url = 'scripts'
+        return self.make_request('GET', url)

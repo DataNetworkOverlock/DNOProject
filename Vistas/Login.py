@@ -127,7 +127,7 @@ class App:
         
         login = self.users.login(payload)
         
-        if "status" in login:
+        if login["status"] != 200:
             message = "Error " + str(login["status"]) + ". " + str(login["message"])
             messagebox.showinfo("Error", message)
         else:
