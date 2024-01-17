@@ -90,7 +90,7 @@ class App:
         self.TextField_Pass.pack()
 
         # Botton acceder a panel
-        btn_acceder = tk.Button(cuadro, text="Iniciar sesion", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.mostrar_panel)
+        btn_acceder = tk.Button(cuadro, text="Iniciar sesión", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.mostrar_panel)
         btn_acceder.pack(anchor=("e"), padx=55, pady=50)
         btn_acceder.pack()
 
