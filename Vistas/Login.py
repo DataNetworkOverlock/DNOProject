@@ -90,7 +90,7 @@ class App:
         self.TextField_Pass.pack()
 
         # Botton acceder a panel
-        btn_acceder = tk.Button(cuadro, text="Iniciar sesion", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.mostrar_panel)
+        btn_acceder = tk.Button(cuadro, text="Iniciar sesión", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.mostrar_panel)
         btn_acceder.pack(anchor=("e"), padx=55, pady=50)
         btn_acceder.pack()
 
@@ -127,7 +127,7 @@ class App:
         
         login = self.users.login(payload)
         
-        if "status" in login:
+        if login["status"] != 200:
             message = "Error " + str(login["status"]) + ". " + str(login["message"])
             messagebox.showinfo("Error", message)
         else:

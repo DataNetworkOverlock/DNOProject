@@ -251,7 +251,7 @@ class SigninWindow:
                 'answer': answer
             }
             usuario_creado = self.usuarios.create_user(payload)
-            if "status" in usuario_creado:
+            if usuario_creado["status"] != 200:
                 message = "Error " + str(usuario_creado["status"]) + ". " + str(usuario_creado["message"])
                 messagebox.showinfo("Error", message)
             else:

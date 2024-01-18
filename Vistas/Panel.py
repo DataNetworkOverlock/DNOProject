@@ -12,7 +12,7 @@ class PanelWindow:
         self.root = root
         self.app = app
         self.credentials = credentials
-        root.title("Inicio de Sesión") #Titulo de la ventana
+        root.title("Data Network Overlock") #Titulo de la ventana
         root.geometry("1200x720") #Tamaño de la ventana
         root.configure(bg="#1B1A20")# Cambiar el color de fondo a un color hexadecimal
         root.resizable(False, False)# Impedir que la ventana sea redimensionada
