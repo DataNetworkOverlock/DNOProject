@@ -29,7 +29,7 @@ class Parametros:
 
         # Etiqueta y entrada para el titulo de descripcion
         lblDescrp = tk.Label(cuadro_Descripcion, text="Descripcion")
-        lblDescrp.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 10))
+        lblDescrp.config(fg="#B4BDE2", bg="#26272B", font=("Poppins", 20))
         lblDescrp.pack(anchor="w", padx=25, pady=(5, 10))
 
         # Etiqueta y entrada para el Contenido de la descripcion
