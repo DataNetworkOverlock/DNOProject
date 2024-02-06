@@ -76,8 +76,7 @@ class PanelWindow:
             for nombre, etiqueta, parametro, descripcion in zip(
                 nombres_scripts, etiquetas_scripts * (len(nombres_scripts) // len(etiquetas_scripts)),
                 parametros_scripts, descripcion_Scripts
-            )
-]
+            )]
 
         # Agregamos una variable para almacenar los scripts originales sin filtrar
         self.scripts_info_original = scripts_info.copy()
