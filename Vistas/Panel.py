@@ -64,19 +64,27 @@ class PanelWindow:
         self.frame_interior = tk.Frame(self.cuadroCmdInterno, bg='#191A1E')  # Frame interno al Canvas
         self.cuadroCmdInterno.create_window((0, 0), window=self.frame_interior, anchor='nw')
 
+        
+
         nombres_scripts = ["Script " + str(i) for i in range(1, 21)]  # Ejemplo con 20 scripts
         etiquetas_scripts = ["John The Ripper","John The Ripper","John The Ripper","John The Ripper","John The Ripper", 
                              "Nikto","Nikto","Nikto","Nikto","Nikto", "Nmap", "Nmap","Nmap","Nmap","Nmap", "SQLMap"
-                             ,"SQLMap","SQLMap","SQLMap","SQLMap"] # Ejemplo con 20 scripts
+                             ,"SQLMap","SQLMap","SQLMap","SQLMap","SQLMap","SQLMap"] # Ejemplo con 20 scripts
         parametros_scripts = ["1","1","2","1","3","1","1","2","1","3","1","1","2","1","3","1","1","2","1","3"]  # Ejemplo con 20 parámetros
         descripcion_Scripts = ["A1","B1","C2","D1","E3","F1","G1","H2","I1","J3","K1","L1","M2","N1","O3","P1","Q1","R2","S1","T3"]  # Ejemplo con 20 parámetros
         # Combinar los tres arreglos en una matriz
         scripts_info = [
-            {"nombre": nombre, "etiqueta": etiqueta, "parametro": parametro, "descripcion": descripcion}
+            {
+                "nombre": nombre, 
+                "etiqueta": etiqueta, 
+                "parametro": parametro, 
+                "descripcion": descripcion
+            }
             for nombre, etiqueta, parametro, descripcion in zip(
-                nombres_scripts, etiquetas_scripts * (len(nombres_scripts) // len(etiquetas_scripts)),
+                nombres_scripts, etiquetas_scripts,
                 parametros_scripts, descripcion_Scripts
-            )]
+            )
+        ]
 
         # Agregamos una variable para almacenar los scripts originales sin filtrar
         self.scripts_info_original = scripts_info.copy()
@@ -85,7 +93,7 @@ class PanelWindow:
 
         for grupo in grupos:
             marco_grupo = tk.Frame(self.frame_interior, bg='#191A1E')
-            marco_grupo.pack(padx=20, pady=10, fill=tk.BOTH, expand=True)
+            marco_grupo.pack(padx=20, pady=15, fill=tk.BOTH, expand=True)
 
             for script_info in grupo:
                 nombre = script_info["nombre"]
@@ -96,16 +104,16 @@ class PanelWindow:
                 nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
                 nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5, fill=tk.BOTH, expand=True)
 
-                label_nombre = tk.Label(nuevo_frame, text=f"                  {nombre}                  ", font=("Poppins", 12), bg='#26272B', fg="white")
+                label_nombre = tk.Label(nuevo_frame, text=f"{nombre}", font=("Poppins", 12), bg='#26272B', fg="white", width=25)
                 label_nombre.pack()
 
-                label_etiqueta = tk.Label(nuevo_frame, text=f"                  {etiqueta}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                label_etiqueta = tk.Label(nuevo_frame, text=f"{etiqueta}", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2", justify="center")
                 label_etiqueta.pack()
 
-                label_parametro = tk.Label(nuevo_frame, text=f"                  Parametros: {parametro}                  ", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                label_parametro = tk.Label(nuevo_frame, text=f"Parametros: {parametro}", font=("Poppins", 10), bg='#26272B', fg="#B4BDE2", justify="center")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro, d=descripcion: self.abrir_parametros(n, p, d))
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", pady=5, font=("Poppins", 10), border=0, command=lambda n=nombre, p=parametro, d=descripcion: self.abrir_parametros(n, p, d))
                 button.pack()
         
         # Actualizar el área desplazable del Canvas después de agregar los elementos
