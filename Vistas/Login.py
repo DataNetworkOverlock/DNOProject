@@ -141,7 +141,7 @@ class App:
                 str(login["response"]["message"])}"
             messagebox.showinfo("Error", message)
         else:
-            self.credentials = login
+            self.credentials = login["response"]
             self.hide()
             create_panel_window(self.root, self, self.credentials)
 
