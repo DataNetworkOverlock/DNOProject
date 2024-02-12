@@ -10,7 +10,7 @@ class App:
     def __init__(self, root):
         self.root = root
         root.title("Inicio de Sesión")  # Titulo de la ventana
-        root.geometry("1200x720")  # Tamaño de la ventana
+        root.geometry("800x600")  # Tamaño de la ventana
         # Cambiar el color de fondo a un color hexadecimal
         root.configure(bg="#1B1A20")
         # Impedir que la ventana sea redimensionada
@@ -47,7 +47,7 @@ class App:
         # Creacion y especificacion decolor
         cuadro = tk.Frame(self.root, bg="#26272B")
         # Ubicacion del frame
-        cuadro.place(relx=0.5, rely=0.2, relwidth=0.6,
+        cuadro.place(relx=0.5, rely=0.2, relwidth=0.8,
                      relheight=0.6, anchor="n")
 
         # Label (Nombre de usuario)
@@ -60,7 +60,7 @@ class App:
         # tipo de letra y tamaño de esta
         lblNU.config(font=("Poppins", 14))
         # Ubicacion
-        lblNU.pack(anchor=("w"), padx=50, pady=(60, 10))
+        lblNU.pack(anchor=("w"), padx=50, pady=(40, 5))
         lblNU.pack()
 
         # TextField (Nombre de usuario)
@@ -82,7 +82,7 @@ class App:
         # tipo de letra y tamaño de esta
         lblPass.config(font=("Poppins", 14))
         # Ubicacion
-        lblPass.pack(anchor=("w"), padx=50, pady=(50, 10))
+        lblPass.pack(anchor=("w"), padx=50, pady=(40, 5))
         lblPass.pack()
 
         # TextField(Password)
@@ -95,23 +95,26 @@ class App:
         self.TextField_Pass.pack()
 
         # Botton acceder a panel
-        btn_acceder = tk.Button(cuadro, text="Iniciar sesión", relief="solid", bg="#B7BBD0", fg="black", font=(
-            "Poppins", 14), border=0, command=self.mostrar_panel)
-        btn_acceder.pack(anchor=("e"), padx=55, pady=50)
+        btn_acceder = tk.Button(cuadro, text="Iniciar sesión",
+                                relief="solid", bg="#B7BBD0", fg="black",
+                                font=("Poppins", 14), border=0, command=self.mostrar_panel)
+        btn_acceder.pack(anchor=("e"), padx=55, pady=30)
         btn_acceder.pack()
 
         # boton (registrarse)
         # configuracion de boton
-        btnR = tk.Button(self.root, text="Registrarse", relief="flat", bg="#1B1A20", fg="#B4BADE", font=(
-            "Poppins", 14, "italic"), command=self.mostrar_ventana_registro)
+        btnR = tk.Button(self.root, text="Registrarse",
+                         relief="flat", bg="#1B1A20", fg="#B4BADE", cursor="hand2",
+                         font=("Poppins", 11, "italic"), command=self.mostrar_ventana_registro)
         # ubicacion de boton
-        btnR.place(relx=0.245, rely=0.825, anchor="n")
+        btnR.place(relx=0.16, rely=0.8, anchor="n")
 
         # Boton (recordar contraseña)
-        btnRP = tk.Button(self.root, text="¿Olvidaste tu contraseña?", relief="flat",
-                          bg="#1B1A20", fg="#B4BADE", font=("Poppins", 14, "italic"))
+        btnRP = tk.Button(self.root, text="¿Olvidaste tu contraseña?",
+                          relief="flat", bg="#1B1A20", fg="#B4BADE", cursor="hand2",
+                          font=("Poppins", 11, "italic"))
         # ubicacion de boton
-        btnRP.place(relx=0.425, rely=0.825, anchor="n")
+        btnRP.place(relx=0.35, rely=0.8, anchor="n")
 
     # Funcion para abrir ventana Singin.py
     def mostrar_ventana_registro(self):

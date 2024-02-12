@@ -2,19 +2,24 @@ import tkinter as tk
 
 
 class Parametros:
-    def __init__(self, root, nombre, n_parametros, descripcion):
+    def __init__(self, root, datos):
         # Inicialización de la clase
         self.root = root
-        self.nombre = nombre
-        self.n_parametros = n_parametros
-        self.descripcion = descripcion
+        self.token = datos["token"]
+        self.user = datos["user"]
+        self.script = datos["script"]
+        self.nombre_script = datos["nombre_script"]
+        self.parametros = datos["parametros"]
+        self.descripcion_script = datos["descripcion_script"]
+        self.ruta = datos["ruta"]
         self.cuadro = None
+        self.param_fields = {}
         self.create_widgets()
 
     def create_widgets(self):
         # Configuración de la ventana de parámetros
         self.ventana = tk.Toplevel(self.root)
-        self.ventana.title(f"Parámetros - {self.nombre}")
+        self.ventana.title(f"Parámetros - {self.nombre_script}")
         self.ventana.geometry("800x550")
         self.ventana.configure(bg="#1B1A20")
         self.ventana.resizable(False, False)
@@ -37,23 +42,24 @@ class Parametros:
 
         # Etiqueta y entrada para el Contenido de la descripcion
         lblDescrp = tk.Label(cuadro_descripcion,
-                             text=self.descripcion)
+                             text=self.descripcion_script)
         lblDescrp.config(fg="#B4BDE2", bg="#26272B",
                          wraplength=200, font=("Poppins", 11))
-        lblDescrp.pack(anchor="w", padx=15, pady=(0, 10))
+        lblDescrp.pack(anchor="w", padx=10, pady=(0, 10))
 
         # Frame principal
         self.cuadro = tk.Frame(self.ventana, bg="#26272B")
         self.cuadro.place(relx=0.65, rely=0.2, relwidth=0.65,
-                     relheight=0.65, anchor="n")
+                          relheight=0.65, anchor="n")
 
-        for i in range(1, self.n_parametros + 1):
-            self.mostrar_campos(numero=i)
-        
+        for parametro in self.parametros:
+            self.mostrar_campos(parametro=parametro)
+
         # Botón para ejecutar el script
-        btn_acceder = tk.Button(self.ventana, text="Ejecutar Script", relief="solid",
-                                bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0)
-        btn_acceder.place(relx=0.9, rely=0.875, anchor="n")
+        btn_ejecutar = tk.Button(self.ventana, text="Ejecutar Script", relief="solid",
+                                 bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0,
+                                 command=lambda: self.ejecutar_script())
+        btn_ejecutar.place(relx=0.9, rely=0.875, anchor="n")
 
     def centrar_ventana(self):
         # Función para centrar la ventana
@@ -63,14 +69,50 @@ class Parametros:
         x = (self.ventana.winfo_screenwidth() - ancho) // 2
         y = (self.ventana.winfo_screenheight() - alto) // 2
         self.ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
-    
-    def mostrar_campos(self, numero):
-        label_param = tk.Label(self.cuadro, text=f"Parámetro número {numero}")
+
+    def mostrar_campos(self, parametro):
+        label_param = tk.Label(self.cuadro, text=parametro)
         label_param.config(fg="#B4BDE2", bg="#26272B",
-                     font=("Poppins", 12))
+                           font=("Poppins", 12))
         label_param.pack(anchor="w", padx=40, pady=(15, 5))
 
         field_param = tk.Entry(self.cuadro, bg="#0D4044",
-                                font=("Poppins", 12), relief="solid",
-                                border=0, width=150, fg="white")
+                               font=("Poppins", 12), relief="solid",
+                               border=0, width=150, fg="white")
         field_param.pack(anchor="w", padx=40)
+        self.param_fields[parametro] = field_param
+
+    def ejecutar_script(self):
+        payload = {
+            "token": self.token,
+            "user": self.user,
+            "script": self.script,
+            "source": self.ruta,
+            "parameters": {}
+        }
+
+        for param, value in self.param_fields.items():
+            payload["parameters"][param] = value.get()
+        
+        """
+        ### TODO - Enviar datos y cerrar ventana ###
+        
+        Hacer la llamada de Paramiko para enviar el payload
+        con la ruta del script que se va a ejecutar
+
+        Formato payload:
+        {
+            token: 'eyJhbGc...',
+            user: 'e9a1eb0c-59b5-46a1-8fdf-a4e47becfd15',
+            script: '07a3a36b-9372-4d7a-a078-58a3ea8e75b8',
+            source: '/ruta/del/script',
+            parameters: {
+                param1: '192.168.x.x',
+                param2: 'no se',
+                paramx: '...'
+            }
+        }
+        """
+
+        #enviar_payload(payload)
+        #cerrar_ventana()

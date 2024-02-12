@@ -34,7 +34,8 @@ class PanelWindow:
         self.frame_interior = None
         self.selected_options = []  # Inicializar la lista aquí
 
-        self.scripts = Scripts(self.credentials["token"])
+        self.token = self.credentials["token"]
+        self.scripts = Scripts(token=self.token)
 
         self.create_widgets()  # Llamado de funcion para crear los widgets
 
@@ -66,7 +67,7 @@ class PanelWindow:
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
         self.cuadroCmdInterno = tk.Canvas(
-            cuadroCmd2, bg="#191A1E", yscrollcommand=scrollbar.set)
+            cuadroCmd2, bg="#191A1E", background="#191A1E", yscrollcommand=scrollbar.set, highlightthickness=0)
         self.cuadroCmdInterno.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         scrollbar.config(command=self.cuadroCmdInterno.yview)
@@ -75,28 +76,6 @@ class PanelWindow:
             self.cuadroCmdInterno, bg='#191A1E')  # Frame interno al Canvas
         self.cuadroCmdInterno.create_window(
             (0, 0), window=self.frame_interior, anchor='nw')
-
-        """ # Ejemplo con 20 scripts
-        nombres_scripts = ["Script " + str(i) for i in range(1, 21)]
-        etiquetas_scripts = ["John The Ripper","John The Ripper","John The Ripper","John The Ripper","John The Ripper",
-                             "Nikto","Nikto","Nikto","Nikto","Nikto", "Nmap", "Nmap","Nmap","Nmap","Nmap", "SQLMap"
-                             ,"SQLMap","SQLMap","SQLMap","SQLMap","SQLMap","SQLMap"]
-        parametros_scripts = ["1","1","2","1","3","1","1","2","1","3","1","1","2","1","3","1","1","2","1","3"]
-        descripcion_Scripts = ["A1","B1","C2","D1","E3","F1","G1","H2","I1","J3","K1","L1","M2","N1","O3","P1","Q1","R2","S1","T3"]
-        # Combinar los tres arreglos en una matriz
-        scripts_info = [
-            {
-                "nombre": nombre, 
-                "etiqueta": etiqueta, 
-                "parametro": parametro, 
-                "descripcion": descripcion
-            }
-            for nombre, etiqueta, parametro, descripcion in zip(
-                nombres_scripts, etiquetas_scripts,
-                parametros_scripts, descripcion_Scripts
-            )
-        ]
-        print(scripts_info) """
 
         scripts = self.scripts.get_scripts()
         scripts_info = scripts["response"]
@@ -118,7 +97,7 @@ class PanelWindow:
         # Creacion y especificacion decolor
         cuadroTool = tk.Frame(self.root, bg="#1B1A20")
         # Ubicacion del frame
-        cuadroTool.place(relx=0.14, rely=0.0, relwidth=0.35,
+        cuadroTool.place(relx=0.14, rely=0.0, relwidth=0.3,
                          relheight=1.0, anchor="n")
 
         # Label (titulo)
@@ -142,8 +121,8 @@ class PanelWindow:
 
         # TextField (Busqueda)
         self.TextField_Busqueda = tk.Entry(cuadroEtiquetas)
-        self.TextField_Busqueda.config(bg="#0D4044", font=(
-            "Poppins", 12), relief="solid", border=0, width=23)
+        self.TextField_Busqueda.config(bg="#0D4044", relief="solid",
+                                       font=("Poppins", 12), border=0, width=18)
         self.TextField_Busqueda.insert(0, 'Filtro')
         self.TextField_Busqueda.bind('<FocusIn>', self.on_entry_click)
         self.TextField_Busqueda.bind('<FocusOut>', self.on_focus_out)
@@ -153,8 +132,9 @@ class PanelWindow:
 
         # boton (Buscar)
         # configuracion de boton
-        btnSearch = tk.Button(cuadroEtiquetas, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=(
-            "Poppins", 10), border=0, command=self.buscar_scripts_por_nombre)
+        btnSearch = tk.Button(cuadroEtiquetas, text="Buscar",
+                              relief="solid", bg="#B7BBD0", fg="black",  border=0,
+                              font=("Poppins", 10), command=self.buscar_scripts_por_nombre)
         # ubicacion de boton
         btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
@@ -170,20 +150,23 @@ class PanelWindow:
 
         # boton (Ver Reportes)
         # configuracion de boton
-        btnR = tk.Button(cuadroTool, text="Ver reportes", relief="solid", bg="#B7BBD0",
-                         fg="black", font=("Poppins", 12), border=0, command=self.ir_a_reportes)
+        btnR = tk.Button(cuadroTool, text="Ver reportes",
+                         relief="solid", bg="#B7BBD0", fg="black",
+                         font=("Poppins", 11), border=0, command=self.ir_a_reportes)
         # ubicacion de boton
         btnR.place(relx=0.275, rely=0.875, anchor="n")
 
         # Boton (Abrir CLI)
-        btnCLI = tk.Button(cuadroTool, text="Filtrar por etiqueta", relief="solid", bg="#B7BBD0",
-                           fg="black", font=("Poppins", 12), border=0, command=self.buscar_scripts)
+        btnCLI = tk.Button(cuadroTool, text="Buscar etiquetas",
+                           relief="solid", bg="#B7BBD0", fg="black",
+                           font=("Poppins", 11), border=0, command=self.buscar_scripts)
         # ubicacion de boton
         btnCLI.place(relx=0.625, rely=0.875, anchor="n")
 
         # Boton (Volver a Login)
-        btnRP = tk.Button(cuadroTool, text="Salir", relief="solid", bg="#B7BBD0", fg="black", font=(
-            "Poppins", 12), border=0, command=self.ir_a_inicio_sesion)
+        btnRP = tk.Button(cuadroTool, text="Salir",
+                          relief="solid", bg="#B7BBD0", fg="black",
+                          font=("Poppins", 11), border=0, command=self.ir_a_inicio_sesion)
         # ubicacion de boton
         btnRP.place(relx=0.89, rely=0.875, anchor="n")
 
@@ -218,8 +201,19 @@ class PanelWindow:
             for script_info in grupo:
                 nombre = script_info["name"]
                 etiqueta = script_info["tags"]
-                n_parametros = len(script_info["parameters"])
+                parametros = script_info["parameters"]
+                n_parametros = len(parametros)
                 descripcion = script_info["description"]
+
+                datos = {
+                    "token": self.token,
+                    "user": self.credentials["uuid"],
+                    "script": script_info["uuid"],
+                    "nombre_script": nombre,
+                    "parametros": parametros,
+                    "descripcion_script": descripcion,
+                    "ruta": script_info["source"]
+                }
 
                 nuevo_frame = tk.Frame(marco_grupo, bg='#26272B')
                 nuevo_frame.pack(side=tk.LEFT, padx=5, pady=5,
@@ -227,8 +221,8 @@ class PanelWindow:
 
                 label_nombre = tk.Label(nuevo_frame,
                                         text=f"{nombre}",
-                                        font=("Poppins", 12), bg='#26272B', fg="white", width=25)
-                label_nombre.pack()
+                                        font=("Poppins", 12), bg='#26272B', fg="white", width=20)
+                label_nombre.pack(pady=(5, 0))
 
                 label_etiqueta = tk.Label(nuevo_frame,
                                           text=f"| {" | ".join(etiqueta)} |",
@@ -240,19 +234,19 @@ class PanelWindow:
                                            font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}", relief="solid", bg="#B7BBD0", fg="black", font=(
-                    "Poppins", 10), border=0, command=lambda n=nombre, p=n_parametros, d=descripcion: self.abrir_parametros(n, p, d))
-                button.pack()
+                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}",
+                                   relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0,
+                                   command=lambda datos=datos: self.abrir_parametros(datos))
+                button.pack(pady=(0, 10))
 
         self.cuadroCmdInterno.update_idletasks()
         self.cuadroCmdInterno.configure(
             scrollregion=self.cuadroCmdInterno.bbox("all"))
 
     # ...
-    def abrir_parametros(self, nombre_script, n_parametros, descripcion_script):
+    def abrir_parametros(self, datos):
         # Crea una instancia de la clase Parametros y pasa el nombre del script
-        parametros_window = Parametros(
-            root=self.root, nombre=nombre_script, n_parametros=n_parametros, descripcion=descripcion_script)
+        parametros_window = Parametros(root=self.root, datos=datos)
         # Mostrar la ventana de parámetros
         parametros_window.ventana.deiconify()
 
