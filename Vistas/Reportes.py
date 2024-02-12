@@ -1,19 +1,23 @@
 import tkinter as tk
 import os
 
+
 def create_menu_window(root, app, credentials):
     menu_window = tk.Toplevel(root)
     MenuWindow(menu_window, app, credentials)
+
 
 class MenuWindow:
     def __init__(self, root, app, credentials):
         self.root = root
         self.app = app
         self.credentials = credentials
-        root.title("Reportes") #Titulo de la ventana
-        root.geometry("1200x720") #Tamaño de la ventana
-        root.configure(bg="#1B1A20")# Cambiar el color de fondo a un color hexadecimal
-        root.resizable(False, False)# Impedir que la ventana sea redimensionada
+        root.title("Reportes")  # Titulo de la ventana
+        root.geometry("1200x720")  # Tamaño de la ventana
+        # Cambiar el color de fondo a un color hexadecimal
+        root.configure(bg="#1B1A20")
+        # Impedir que la ventana sea redimensionada
+        root.resizable(False, False)
         # Centrar la ventana
         root.update_idletasks()
         ancho = root.winfo_width()
@@ -33,43 +37,49 @@ class MenuWindow:
 
     def create_widgets(self):
 
-        #Frame (Visualizacion de contenido)
-        #Creacion y especificacion decolor
+        # Frame (Visualizacion de contenido)
+        # Creacion y especificacion decolor
         cuadroV = tk.Frame(self.root, bg="#1E1F24", border=0)
-        #Ubicacion del frame
-        cuadroV.place(relx=0.65, rely=0.0, relwidth=0.7, relheight=1.0, anchor="n")
+        # Ubicacion del frame
+        cuadroV.place(relx=0.65, rely=0.0, relwidth=0.7,
+                      relheight=1.0, anchor="n")
 
-        #Label (Subtitulo)
-        #Texto del Label
+        # Label (Subtitulo)
+        # Texto del Label
         self.lblNombreReporte = tk.Label(cuadroV, text="REPORTES")
-        #Configuracion de Label
-        self.lblNombreReporte.config(fg = "#B7BBD0", bg="#1E1F24", font=("Lucida Console", 40))
-        #Ubicacion
-        self.lblNombreReporte.pack(anchor=("w"), padx=25, pady=(100,10))
+        # Configuracion de Label
+        self.lblNombreReporte.config(
+            fg="#B7BBD0", bg="#1E1F24", font=("Lucida Console", 40))
+        # Ubicacion
+        self.lblNombreReporte.pack(anchor=("w"), padx=25, pady=(100, 10))
         self.lblNombreReporte.pack()
 
         # Creacion de text area
         self.text_area = tk.Text(cuadroV, wrap=tk.WORD)
         self.text_area.pack()
         # Configuracion del textArea
-        self.text_area.config(width=95, height=27, bg="#1B1A20", fg="white", relief="solid", borderwidth=0)
+        self.text_area.config(width=95, height=27, bg="#1B1A20",
+                              fg="white", relief="solid", borderwidth=0)
         self.text_area.pack(anchor=("w"), padx=25, pady=10)
 
-        #Frame (Listados de reportes)
-        #Creacion y especificacion de color
+        # Frame (Listados de reportes)
+        # Creacion y especificacion de color
         cuadroL = tk.Frame(self.root, bg="#1B1A20", border=0)
-        #Ubicacion del frame
-        cuadroL.place(relx=0.155, rely=0.0, relwidth=0.3, relheight=1.0, anchor="n")
+        # Ubicacion del frame
+        cuadroL.place(relx=0.155, rely=0.0, relwidth=0.3,
+                      relheight=1.0, anchor="n")
 
-        #Frame (cuadro)
-        #Creacion y especificacion de color
+        # Frame (cuadro)
+        # Creacion y especificacion de color
         cuadroLI = tk.Frame(cuadroL, bg="#16151A", border=0)
-        #Ubicacion del frame
-        cuadroLI.place(relx=0.475, rely=0.1, relwidth=0.8, relheight=0.85, anchor="n")
+        # Ubicacion del frame
+        cuadroLI.place(relx=0.475, rely=0.1, relwidth=0.8,
+                       relheight=0.85, anchor="n")
 
         # TextField (Busqueda)
         self.TextField_Busqueda = tk.Entry(cuadroLI)
-        self.TextField_Busqueda.config(bg="#0D4044", font=("Poppins", 12), relief="solid", border=0, width=20)
+        self.TextField_Busqueda.config(bg="#0D4044", font=(
+            "Poppins", 12), relief="solid", border=0, width=20)
         self.TextField_Busqueda.insert(0, 'Filtro')
         self.TextField_Busqueda.bind('<FocusIn>', self.on_entry_click)
         self.TextField_Busqueda.bind('<FocusOut>', self.on_focus_out)
@@ -77,15 +87,17 @@ class MenuWindow:
         self.TextField_Busqueda.pack(anchor=("w"), padx=10, pady=17)
         self.TextField_Busqueda.pack()
 
-        #boton (Buscar)
-        #configuracion de boton
-        btnSearch = tk.Button(cuadroLI, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10),border=0, command=self.actualizar_listbox)
-        #ubicacion de boton
+        # boton (Buscar)
+        # configuracion de boton
+        btnSearch = tk.Button(cuadroLI, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=(
+            "Poppins", 10), border=0, command=self.actualizar_listbox)
+        # ubicacion de boton
         btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
         # Crear un ListBox
         self.ListBoxReportes = tk.Listbox(cuadroLI, selectmode=tk.SINGLE)
-        self.ListBoxReportes.configure(font=("Poppins", 14), bg="#25242D", fg = "#AEAEB0", border=0)
+        self.ListBoxReportes.configure(
+            font=("Poppins", 14), bg="#25242D", fg="#AEAEB0", border=0)
         self.ListBoxReportes.place(x=10, y=60, width=260, height=500)
 
         # Directorio que se explora
@@ -98,9 +110,9 @@ class MenuWindow:
         for archivo in archivos:
             # Verificar el nombre del archivo
             if archivo.endswith(".txt"):
-                #Divide el archivo en dos partes (nombre/extension)
+                # Divide el archivo en dos partes (nombre/extension)
                 nombre_sin_extension = os.path.splitext(archivo)[0]
-                #Agrega el el nombre sin extension a la lista
+                # Agrega el el nombre sin extension a la lista
                 self.ListBoxReportes.insert(tk.END, nombre_sin_extension)
 
         # Crear un diccionario para almacenar el contenido de los archivos
@@ -109,29 +121,34 @@ class MenuWindow:
         # Leer el contenido de los archivos y agregarlo al diccionario
         for archivo in archivos:
             if archivo.endswith(".txt"):
-                nombre_sin_extension = os.path.splitext(archivo)[0]  # Obtener el nombre sin extensión
+                nombre_sin_extension = os.path.splitext(
+                    archivo)[0]  # Obtener el nombre sin extensión
                 with open(os.path.join(directorio, archivo), "r", encoding="utf-8") as file:
                     self.contenido[nombre_sin_extension] = file.read()
 
         # Configurar un evento de selección en el ListBox
-        self.ListBoxReportes.bind("<<ListboxSelect>>", self.seleccionar_elemento)
+        self.ListBoxReportes.bind(
+            "<<ListboxSelect>>", self.seleccionar_elemento)
 
-        #boton (Exportar a PDF)
-        #configuracion de boton
-        btnSearch = tk.Button(cuadroV, text="PDF", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0)
-        #ubicacion de boton
+        # boton (Exportar a PDF)
+        # configuracion de boton
+        btnSearch = tk.Button(cuadroV, text="PDF", relief="solid",
+                              bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0)
+        # ubicacion de boton
         btnSearch.place(relx=0.91, rely=0.875, anchor="n")
 
-        #boton (Regresar a consola)
-        #configuracion de boton
-        btnSearch = tk.Button(cuadroV, text="Volver a consola", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0, command=self.ir_a_panel)
-        #ubicacion de boton
+        # boton (Regresar a consola)
+        # configuracion de boton
+        btnSearch = tk.Button(cuadroV, text="Volver a consola", relief="solid", bg="#B7BBD0",
+                              fg="black", font=("Poppins", 12), border=0, command=self.ir_a_panel)
+        # ubicacion de boton
         btnSearch.place(relx=0.115, rely=0.875, anchor="n")
 
-        #boton (Deslogueo)
-        #configuracion de boton
-        btnSearch = tk.Button(cuadroV, text="Salir de cuenta", relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 14),border=0, command=self.ir_a_inicio_sesion)
-        #ubicacion de boton
+        # boton (Deslogueo)
+        # configuracion de boton
+        btnSearch = tk.Button(cuadroV, text="Salir de cuenta", relief="solid", bg="#B7BBD0", fg="black", font=(
+            "Poppins", 14), border=0, command=self.ir_a_inicio_sesion)
+        # ubicacion de boton
         btnSearch.place(relx=0.851, rely=0.05, anchor="n")
 
     def ir_a_panel(self):
@@ -149,8 +166,8 @@ class MenuWindow:
         if index:
             selected_item = self.ListBoxReportes.get(index[0])
             if selected_item in self.contenido:
-                 self.mostrar_contenido(selected_item)
-    
+                self.mostrar_contenido(selected_item)
+
     def on_entry_click(self, event):
         if self.TextField_Busqueda.get() == 'Filtro':
             self.TextField_Busqueda.delete(0, "end")
@@ -181,7 +198,8 @@ class MenuWindow:
     # Función para mostrar el contenido del archivo seleccionado en el Text
     def mostrar_contenido(self, selected_item):
         if selected_item in self.contenido:
-            contenido_text = self.contenido[selected_item]  # Obtener el contenido del archivo seleccionado
-            self.text_area.delete('1.0', tk.END)  # Borrar el contenido actual del Text
+            # Obtener el contenido del archivo seleccionado
+            contenido_text = self.contenido[selected_item]
+            # Borrar el contenido actual del Text
+            self.text_area.delete('1.0', tk.END)
             self.text_area.insert(tk.END, contenido_text)
-    
