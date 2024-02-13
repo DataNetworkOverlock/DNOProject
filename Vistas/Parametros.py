@@ -1,4 +1,7 @@
 import tkinter as tk
+import datetime
+from utils.execute_command import ExecCommand
+from utils.tests import Tests
 
 
 class Parametros:
@@ -14,6 +17,10 @@ class Parametros:
         self.ruta = datos["ruta"]
         self.cuadro = None
         self.param_fields = {}
+
+        self.test = Tests(self.token)
+        self.comando = ExecCommand()
+
         self.create_widgets()
 
     def create_widgets(self):
@@ -87,32 +94,35 @@ class Parametros:
             "token": self.token,
             "user": self.user,
             "script": self.script,
+            "nombre_script": self.nombre_script,
             "source": self.ruta,
             "parameters": {}
         }
 
+        tests = []
+
         for param, value in self.param_fields.items():
             payload["parameters"][param] = value.get()
-        
-        """
-        ### TODO - Enviar datos y cerrar ventana ###
-        
-        Hacer la llamada de Paramiko para enviar el payload
-        con la ruta del script que se va a ejecutar
 
-        Formato payload:
-        {
-            token: 'eyJhbGc...',
-            user: 'e9a1eb0c-59b5-46a1-8fdf-a4e47becfd15',
-            script: '07a3a36b-9372-4d7a-a078-58a3ea8e75b8',
-            source: '/ruta/del/script',
-            parameters: {
-                param1: '192.168.x.x',
-                param2: 'no se',
-                paramx: '...'
-            }
+        if not self.nombre_script in tests and len(tests) < 4:
+            tests.append(self.nombre_script)
+            payload["report"] = self.comando.exec(payload.copy())
+            # payload["report"] = "este es el reporte"
+            self.crear_test(data=payload)
+        else:
+            print("No tengo tiempo para poner un error")
+
+        self.cerrar_ventana()
+
+    def crear_test(self, data):
+        payload = {
+            "ip": list(data["parameters"].values())[0],
+            "date": str(datetime.datetime.now()),
+            "report": data["report"],
+            "user": data["user"],
+            "script": data["script"]
         }
-        """
+        self.test.create_test(payload)
 
-        #enviar_payload(payload)
-        #cerrar_ventana()
+    def cerrar_ventana(self):
+        self.ventana.destroy()
