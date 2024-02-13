@@ -1,11 +1,9 @@
 import tkinter as tk
 import os
 
-
 def create_menu_window(root, app, credentials):
     menu_window = tk.Toplevel(root)
     MenuWindow(menu_window, app, credentials)
-
 
 class MenuWindow:
     def __init__(self, root, app, credentials):
@@ -85,20 +83,16 @@ class MenuWindow:
         self.TextField_Busqueda.bind('<FocusOut>', self.on_focus_out)
         self.TextField_Busqueda.config(fg='grey')
         self.TextField_Busqueda.pack(anchor=("w"), padx=10, pady=17)
-        self.TextField_Busqueda.pack()
 
         # boton (Buscar)
         # configuracion de boton
         btnSearch = tk.Button(cuadroLI, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=(
-            "Poppins", 10), border=0, command=self.actualizar_listbox)
+            "Poppins", 10), border=0, command=self.actualizar_checkboxes)
         # ubicacion de boton
         btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
-        # Crear un ListBox
-        self.ListBoxReportes = tk.Listbox(cuadroLI, selectmode=tk.SINGLE)
-        self.ListBoxReportes.configure(
-            font=("Poppins", 14), bg="#25242D", fg="#AEAEB0", border=0)
-        self.ListBoxReportes.place(x=10, y=60, width=260, height=500)
+        # Crear una lista para almacenar los checkboxes
+        self.Checkboxes = []
 
         # Directorio que se explora
         directorio = "Recursos/TXTs"
@@ -106,14 +100,20 @@ class MenuWindow:
         # Obtener una lista de nombres de archivos en el directorio
         archivos = os.listdir(directorio)
 
-        # Procesar y agregar los nombres de archivos al ListBox
+        # Procesar y agregar los nombres de archivos como checkboxes
         for archivo in archivos:
             # Verificar el nombre del archivo
             if archivo.endswith(".txt"):
                 # Divide el archivo en dos partes (nombre/extension)
                 nombre_sin_extension = os.path.splitext(archivo)[0]
-                # Agrega el el nombre sin extension a la lista
-                self.ListBoxReportes.insert(tk.END, nombre_sin_extension)
+                # Crear un IntVar para el checkbox
+                var = tk.IntVar()
+                # Crear el checkbox y agregarlo a la lista
+                chk = tk.Checkbutton(cuadroLI, text=nombre_sin_extension, bg="#24B1BD", fg="black", variable=var,
+                                     onvalue=1, offvalue=0, font=("Poppins", 12), command=lambda nombre=nombre_sin_extension: self.mostrar_contenido_checkbox(nombre))
+                chk.var = var  # Guardar la variable de control como un atributo del Checkbutton
+                chk.pack(anchor=tk.W)  # Ajustar la posición
+                self.Checkboxes.append(chk)
 
         # Crear un diccionario para almacenar el contenido de los archivos
         self.contenido = {}
@@ -126,30 +126,26 @@ class MenuWindow:
                 with open(os.path.join(directorio, archivo), "r", encoding="utf-8") as file:
                     self.contenido[nombre_sin_extension] = file.read()
 
-        # Configurar un evento de selección en el ListBox
-        self.ListBoxReportes.bind(
-            "<<ListboxSelect>>", self.seleccionar_elemento)
-
         # boton (Exportar a PDF)
         # configuracion de boton
-        btnSearch = tk.Button(cuadroV, text="PDF", relief="solid",
-                              bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0)
+        btnPDF = tk.Button(cuadroV, text="PDF", relief="solid",
+                           bg="#B7BBD0", fg="black", font=("Poppins", 12), border=0, command=self.handle_checkboxes)
         # ubicacion de boton
-        btnSearch.place(relx=0.91, rely=0.875, anchor="n")
+        btnPDF.place(relx=0.91, rely=0.875, anchor="n")
 
         # boton (Regresar a consola)
         # configuracion de boton
-        btnSearch = tk.Button(cuadroV, text="Volver a consola", relief="solid", bg="#B7BBD0",
+        btnVolver = tk.Button(cuadroV, text="Volver a consola", relief="solid", bg="#B7BBD0",
                               fg="black", font=("Poppins", 12), border=0, command=self.ir_a_panel)
         # ubicacion de boton
-        btnSearch.place(relx=0.115, rely=0.875, anchor="n")
+        btnVolver.place(relx=0.115, rely=0.875, anchor="n")
 
         # boton (Deslogueo)
         # configuracion de boton
-        btnSearch = tk.Button(cuadroV, text="Salir de cuenta", relief="solid", bg="#B7BBD0", fg="black", font=(
+        btnSalir = tk.Button(cuadroV, text="Salir de cuenta", relief="solid", bg="#B7BBD0", fg="black", font=(
             "Poppins", 14), border=0, command=self.ir_a_inicio_sesion)
         # ubicacion de boton
-        btnSearch.place(relx=0.851, rely=0.05, anchor="n")
+        btnSalir.place(relx=0.851, rely=0.05, anchor="n")
 
     def ir_a_panel(self):
         # Lógica para ir a la ventana de registro
@@ -178,22 +174,24 @@ class MenuWindow:
             self.TextField_Busqueda.insert(0, 'Filtro')
             self.TextField_Busqueda.config(fg='grey')
 
-    def actualizar_listbox(self):
-        filtro = self.TextField_Busqueda.get()  # Obtener el filtro
+    def actualizar_checkboxes(self):
+        filtro = self.TextField_Busqueda.get().lower()  # Obtener el filtro
+        # Recorrer todos los checkboxes
+        for checkbox in self.Checkboxes:
+            # Verificar si el nombre del checkbox coincide con el filtro
+            if filtro in checkbox.cget("text").lower():
+                # Mostrar el checkbox y alinear a la izquierda
+                checkbox.pack(anchor=tk.W)
+            else:
+                # Ocultar el checkbox
+                checkbox.pack_forget()
 
-        self.ListBoxReportes.delete(0, tk.END)  # Limpiar el ListBox
-
-        # Directorio que se explora
-        directorio = "Recursos/TXTs"
-
-        # Obtener una lista de nombres de archivos en el directorio
-        archivos = os.listdir(directorio)
-
-        # Procesar y agregar los nombres de archivos al ListBox según el filtro
-        for archivo in archivos:
-            if archivo.lower().endswith(".txt") and filtro.lower() in archivo.lower():
-                nombre_sin_extension = os.path.splitext(archivo)[0]
-                self.ListBoxReportes.insert(tk.END, nombre_sin_extension)
+    # Función para manejar los checkboxes seleccionados
+    def handle_checkboxes(self):
+        for checkbox in self.Checkboxes:
+            if checkbox.var.get() == 1:
+                # Checkbox seleccionado, hacer algo con él
+                print(f"{checkbox.cget('text')} seleccionado")
 
     # Función para mostrar el contenido del archivo seleccionado en el Text
     def mostrar_contenido(self, selected_item):
@@ -203,3 +201,13 @@ class MenuWindow:
             # Borrar el contenido actual del Text
             self.text_area.delete('1.0', tk.END)
             self.text_area.insert(tk.END, contenido_text)
+
+    # Función para mostrar el contenido del archivo asociado al checkbox seleccionado
+    def mostrar_contenido_checkbox(self, nombre_checkbox):
+        if nombre_checkbox in self.contenido:
+            # Obtener el contenido del archivo asociado al checkbox
+            contenido_text = self.contenido[nombre_checkbox]
+            # Borrar el contenido actual del Text
+            self.text_area.delete('1.0', tk.END)
+            self.text_area.insert(tk.END, contenido_text)
+

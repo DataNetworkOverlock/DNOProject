@@ -140,8 +140,7 @@ class App:
         login_status = login["status"]
 
         if login_status != 200:
-            message = f"Error {login_status}. {
-                str(login["response"]["message"])}"
+            message = f"Error {login_status}. {str(login["response"]["message"])}"
             messagebox.showinfo("Error", message)
         else:
             self.credentials = login["response"]
