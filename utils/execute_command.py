@@ -1,13 +1,16 @@
+import os
 import time
 import paramiko
+from dotenv import load_dotenv
 
 
 class ExecCommand:
 
     def __init__(self):
-        self.HOST = '192.168.1.239'
-        self.USER = 'datanetworkoverlock'
-        self.RUTA = "/home/datanetworkoverlock/Escritorio/SCRIPTS"
+        load_dotenv()
+        self.HOST = os.getenv("HOST")
+        self.USER = os.getenv("USER")
+        self.RUTA = os.getenv("PATH")
 
     def exec(self, payload):
         nombre_script = payload["nombre_script"]
@@ -19,7 +22,7 @@ class ExecCommand:
         comando = f".{self.RUTA}/{nombre_script}.sh {parametros}"
 
         try:
-            password = 'DataOverLock1*'
+            password = os.getenv("PASSWORD")
             client = paramiko.SSHClient()
             client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
 
@@ -37,3 +40,5 @@ class ExecCommand:
 
         except paramiko.ssh_exception.AuthenticationException as e:
             print("error")
+        except paramiko.ssh_exception.SSHException as ee:
+            print("ssh error")

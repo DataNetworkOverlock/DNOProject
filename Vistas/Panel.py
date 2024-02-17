@@ -176,7 +176,6 @@ class PanelWindow:
         scripts_filtrados = [
             script for script in self.scripts_info_original if set(script["tags"]).intersection(etiquetas_seleccionadas)
         ]
-        print("BUSCARSCRIPTS", scripts_filtrados)
         self.componente_scripts(scripts_filtrados)
 
     def buscar_scripts_por_nombre(self):
@@ -184,7 +183,6 @@ class PanelWindow:
         scripts_filtrados = [
             script for script in self.scripts_info_original if nombre_a_buscar.lower() in script["name"].lower()
         ]
-        print("BUSCARSCRIPTSNOMBRE", scripts_filtrados)
         self.componente_scripts(scripts_filtrados)
 
     def componente_scripts(self, scripts):
@@ -236,7 +234,7 @@ class PanelWindow:
 
                 button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}",
                                    relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0,
-                                   command=lambda datos=datos: self.abrir_parametros(datos))
+                                   command=lambda datos=datos: self.abrir_parametros(datos=datos))
                 button.pack(pady=(0, 10))
 
         self.cuadroCmdInterno.update_idletasks()

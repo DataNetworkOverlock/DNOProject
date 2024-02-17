@@ -1,9 +1,11 @@
 import tkinter as tk
 import os
 
+
 def create_menu_window(root, app, credentials):
     menu_window = tk.Toplevel(root)
     MenuWindow(menu_window, app, credentials)
+
 
 class MenuWindow:
     def __init__(self, root, app, credentials):
@@ -86,8 +88,10 @@ class MenuWindow:
 
         # boton (Buscar)
         # configuracion de boton
-        btnSearch = tk.Button(cuadroLI, text="Buscar", relief="solid", bg="#B7BBD0", fg="black", font=(
-            "Poppins", 10), border=0, command=self.actualizar_checkboxes)
+        btnSearch = tk.Button(cuadroLI, text="Buscar",
+                              relief="solid", bg="#B7BBD0", fg="black",
+                              font=("Poppins", 10), border=0,
+                              command=self.actualizar_checkboxes)
         # ubicacion de boton
         btnSearch.place(relx=0.85, rely=0.025, anchor="n")
 
@@ -210,4 +214,3 @@ class MenuWindow:
             # Borrar el contenido actual del Text
             self.text_area.delete('1.0', tk.END)
             self.text_area.insert(tk.END, contenido_text)
-

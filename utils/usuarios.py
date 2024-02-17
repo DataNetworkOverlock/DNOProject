@@ -1,5 +1,6 @@
 from utils.http_request import HttpRequest
 
+
 class Usuarios(HttpRequest):
 
     def __init__(self, token=''):
