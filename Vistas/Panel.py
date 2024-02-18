@@ -4,30 +4,28 @@ from utils.scripts import Scripts
 from Vistas.Parametros import Parametros
 
 
-def create_panel_window(root, app, credentials):
-    panel_window = tk.Toplevel(root)
-    PanelWindow(panel_window, app, credentials)
-
-
 class PanelWindow:
 
     def __init__(self, root, app, credentials):
         self.root = root
         self.app = app
         self.credentials = credentials
-        root.title("Data Network Overlock")  # Titulo de la ventana
-        root.geometry("1200x720")  # Tamaño de la ventana
+
+        self.ventana = tk.Toplevel(self.root)
+        self.ventana.title("Data Network Overlock")  # Titulo de la ventana
+        self.ventana.geometry("1200x720")  # Tamaño de la ventana
         # Cambiar el color de fondo a un color hexadecimal
-        root.configure(bg="#1B1A20")
+        self.ventana.configure(bg="#1B1A20")
         # Impedir que la ventana sea redimensionada
-        root.resizable(False, False)
+        self.ventana.resizable(False, False)
         # Centrar la ventana
-        root.update_idletasks()
-        ancho = root.winfo_width()
-        alto = root.winfo_height()
-        x = (root.winfo_screenwidth() - ancho) // 2
-        y = (root.winfo_screenheight() - alto) // 2
-        root.geometry(f"{ancho}x{alto}+{x}+{y}")
+        self.ventana.update_idletasks()
+        ancho = self.ventana.winfo_width()
+        alto = self.ventana.winfo_height()
+        x = (self.ventana.winfo_screenwidth() - ancho) // 2
+        y = (self.ventana.winfo_screenheight() - alto) // 2
+        self.ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
+        self.ventana.protocol("WM_DELETE_WINDOW", self.app.close)
 
         self.TextField_Busqueda = None
         self.cuadroCmdInterno = None
@@ -42,22 +40,22 @@ class PanelWindow:
     def create_widgets(self):
         # Frame (Consola)
         # Creacion y especificacion decolor
-        cuadroCmd = tk.Frame(self.root, bg="#1E1F24")
+        cuadroCmd = tk.Frame(self.ventana, bg="#1E1F24")
         # Ubicacion del frame
         cuadroCmd.place(relx=0.65, rely=0.0, relwidth=0.7,
                         relheight=1.0, anchor="n")
 
         # Label (Principal)
         # Texto del Label
-        lblOverlook = tk.Label(cuadroCmd, text="OVERLOCK")
+        lblOverlock = tk.Label(cuadroCmd, text="OVERLOCK")
         # Color de la letra Label
-        lblOverlook.config(fg="#B4BDE2")
+        lblOverlock.config(fg="#B4BDE2")
         # Color del label (transparente)
-        lblOverlook.config(bg="#1E1F24")
+        lblOverlock.config(bg="#1E1F24")
         # tipo de letra y tamaño de esta
-        lblOverlook.config(font=("Lucida Console", 40))
+        lblOverlock.config(font=("Lucida Console", 40))
         # Ubicacion del Label
-        lblOverlook.place(relx=0.5, rely=0.05, anchor="n")
+        lblOverlock.place(relx=0.5, rely=0.05, anchor="n")
 
         cuadroCmd2 = tk.Frame(cuadroCmd, bg='#191A1E')
         cuadroCmd2.place(relx=0.5, rely=0.2, relwidth=0.85,
@@ -95,7 +93,7 @@ class PanelWindow:
 
         # Frame (Scripts)
         # Creacion y especificacion decolor
-        cuadroTool = tk.Frame(self.root, bg="#1B1A20")
+        cuadroTool = tk.Frame(self.ventana, bg="#1B1A20")
         # Ubicacion del frame
         cuadroTool.place(relx=0.14, rely=0.0, relwidth=0.3,
                          relheight=1.0, anchor="n")
@@ -243,19 +241,17 @@ class PanelWindow:
 
     # ...
     def abrir_parametros(self, datos):
-        # Crea una instancia de la clase Parametros y pasa el nombre del script
-        parametros_window = Parametros(root=self.root, datos=datos)
-        # Mostrar la ventana de parámetros
-        parametros_window.ventana.deiconify()
+        # Inicia la interfaz de Parametros y pasa el nombre del script
+        parametros_window = Parametros(root=self.ventana, datos=datos)
 
     def ir_a_reportes(self):
         # Lógica para ir a la ventana de registro
-        self.root.withdraw()  # Oculta la ventana actual
+        self.ventana.destroy()  # Cierra la ventana actual
         self.app.mostrar_menu()  # Muestra la ventana de registro en la ventana principal
 
     def ir_a_inicio_sesion(self):
         # Lógica para volver a la ventana de inicio de sesión
-        self.root.withdraw()  # Oculta la ventana actual
+        self.ventana.destroy()  # Cierra la ventana actual
         self.app.show()  # Muestra la ventana de inicio de sesión en la ventana principal
 
     # Metodo para hacer desaparecer el subtexto del Entry de busqueda

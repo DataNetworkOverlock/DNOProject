@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import messagebox
 from utils.usuarios import Usuarios
-from Vistas.Panel import create_panel_window
-from Vistas.Reportes import create_menu_window
-from Vistas.Singin import create_signin_window
+from Vistas.Panel import PanelWindow
+from Vistas.Reportes import MenuWindow
+from Vistas.Singin import SigninWindow
 
 
 class App:
@@ -97,7 +97,7 @@ class App:
         # Botton acceder a panel
         btn_acceder = tk.Button(cuadro, text="Iniciar sesión",
                                 relief="solid", bg="#B7BBD0", fg="black",
-                                font=("Poppins", 14), border=0, command=self.mostrar_panel)
+                                font=("Poppins", 14), border=0, command=self.iniciar_sesion)
         btn_acceder.pack(anchor=("e"), padx=55, pady=30)
         btn_acceder.pack()
 
@@ -119,10 +119,10 @@ class App:
     # Funcion para abrir ventana Singin.py
     def mostrar_ventana_registro(self):
         self.hide()
-        create_signin_window(self.root, self)
+        signin = SigninWindow(root=self.root, app=self)
 
     # Funcion para abrir ventana Panel.py
-    def mostrar_panel(self):
+    def iniciar_sesion(self):
 
         # Verificar si los valores ingresados coinciden con los correctos
         username = self.TextField_UserName.get()
@@ -140,28 +140,35 @@ class App:
         login_status = login["status"]
 
         if login_status != 200:
-            message = f"Error {login_status}. {str(login["response"]["message"])}"
+            message = f"Error {login_status}. {
+                str(login["response"]["message"])}"
             messagebox.showinfo("Error", message)
         else:
             self.credentials = login["response"]
-            self.hide()
-            create_panel_window(self.root, self, self.credentials)
+            self.abrir_panel()
 
         # Limpiar los campos después de intentar iniciar sesión
         self.TextField_UserName.delete(0, tk.END)
         self.TextField_Pass.delete(0, tk.END)
 
-    def mostrar_panel2(self):
+    def abrir_panel(self):
         self.hide()
-        create_panel_window(self.root, self, self.credentials)
+        panel = PanelWindow(root=self.root,
+                            app=self,
+                            credentials=self.credentials)
 
     # Función para abrir ventana Reportes.py
     def mostrar_menu(self):
         self.hide()
-        create_menu_window(self.root, self, self.credentials)
+        reportes = MenuWindow(root=self.root,
+                              app=self,
+                              credentials=self.credentials)
 
     def hide(self):
         self.root.withdraw()
 
     def show(self):
         self.root.deiconify()
+
+    def close(self):
+        self.root.destroy()
