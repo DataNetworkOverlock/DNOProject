@@ -3,35 +3,35 @@ from tkinter import messagebox
 from utils.usuarios import Usuarios
 
 
-def create_signin_window(root, app):
-    signin_window = tk.Toplevel(root)
-    SigninWindow(signin_window, app)
-
-
 class SigninWindow:
     def __init__(self, root, app):
         self.root = root
         self.app = app
-        root.title("Registro")  # Titulo de la ventana
-        root.geometry("1200x720")  # Tamaño de la ventana
+
+        self.ventana = tk.Toplevel(self.root)
+        self.ventana.title("Registro")  # Titulo de la ventana
+        self.ventana.geometry("1200x720")  # Tamaño de la ventana
         # Cambiar el color de fondo a un color hexadecimal
-        root.configure(bg="#1B1A20")
+        self.ventana.configure(bg="#1B1A20")
         # Impedir que la ventana sea redimensionada
-        root.resizable(False, False)
+        self.ventana.resizable(False, False)
         # Centrar la ventana
-        root.update_idletasks()
-        ancho = root.winfo_width()
-        alto = root.winfo_height()
-        x = (root.winfo_screenwidth() - ancho) // 2
-        y = (root.winfo_screenheight() - alto) // 2
-        root.geometry(f"{ancho}x{alto}+{x}+{y}")
+        self.ventana.update_idletasks()
+        ancho = self.ventana.winfo_width()
+        alto = self.ventana.winfo_height()
+        x = (self.ventana.winfo_screenwidth() - ancho) // 2
+        y = (self.ventana.winfo_screenheight() - alto) // 2
+        self.ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
+        self.ventana.protocol("WM_DELETE_WINDOW", self.app.close)
+
         self.usuarios = Usuarios()
+
         self.create_widgets()
 
     def create_widgets(self):
         # Label (titulo)
         # Texto del Label
-        lbl = tk.Label(self.root, text="REGISTRO")
+        lbl = tk.Label(self.ventana, text="REGISTRO")
         # Color de la letra Label
         lbl.config(fg="#B7BBD0")
         # Color del label (transparente)
@@ -43,7 +43,7 @@ class SigninWindow:
 
         # Frame (cuadro)
         # Creacion y especificacion decolor
-        cuadro = tk.Frame(self.root, bg="#26272B")
+        cuadro = tk.Frame(self.ventana, bg="#26272B")
         # Ubicación del frame
         cuadro.place(relx=0.5, rely=0.15, relwidth=0.6,
                      relheight=0.7, anchor="n")
@@ -182,13 +182,13 @@ class SigninWindow:
         self.TextField_Answ.pack()
 
         # Botón (registrar)
-        btn_acceder = tk.Button(self.root, text="Registrar", relief="solid", bg="#B7BBD0", fg="black", font=(
+        btn_acceder = tk.Button(self.ventana, text="Registrar", relief="solid", bg="#B7BBD0", fg="black", font=(
             "Poppins", 14), border=0, command=self.registrar_usuario)
         btn_acceder.place(relx=0.7575, rely=0.875, anchor="n")
 
         # botón (Cancelar)
         # configuracion de boton
-        btnCancel = tk.Button(self.root, text="Cancelar", relief="flat", bg="#1B1A20", fg="#B4BADE", font=(
+        btnCancel = tk.Button(self.ventana, text="Cancelar", relief="flat", bg="#1B1A20", fg="#B4BADE", font=(
             "Poppins", 14, "italic"), command=self.volver_al_inicio)
         # Ubicación de botón
         btnCancel.place(relx=0.245, rely=0.875, anchor="n")
@@ -270,5 +270,5 @@ class SigninWindow:
         return contador_registro == 3
 
     def volver_al_inicio(self):
-        self.root.withdraw()
+        self.ventana.destroy()
         self.app.show()

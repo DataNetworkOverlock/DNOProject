@@ -33,10 +33,28 @@ git clone https://github.com/DataNetworkOverlock/DNOProject
 python -m pip install -r requirements.txt
 ```
 
+-   Variables de entorno
+
+```bash
+# Para crear el archivo .env desde la plantilla
+cp .env.example .env
+```
+
+```bash
+# Hostname de la máquina virtual
+HOST=
+# Usuario para acceder a la máquina virtual por SSH
+USER=
+# Clave de la máquina virtual
+PASSWORD=
+# Ruta de los scripts en la máquina virtual
+PATH=
+```
+
 -   Ejecutar
 
 ```bash
-python Vistas/main.py
+python main.py
 ```
 
 ## Relacionados
