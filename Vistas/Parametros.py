@@ -106,7 +106,9 @@ class Parametros:
 
         if not self.nombre_script in tests and len(tests) < 4:
             tests.append(self.nombre_script)
-            payload["report"] = self.comando.exec(payload.copy())
+            test_result = self.comando.exec(payload.copy())
+            print("\nResultado: \n", test_result)
+            payload["report"] = test_result
             # payload["report"] = "este es el reporte"
             self.crear_test(data=payload)
         else:

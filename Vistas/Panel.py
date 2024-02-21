@@ -27,7 +27,7 @@ class PanelWindow:
         self.ventana.geometry(f"{ancho}x{alto}+{x}+{y}")
         self.ventana.protocol("WM_DELETE_WINDOW", self.app.close)
 
-        self.TextField_Busqueda = None
+        self.entry_busqueda = None
         self.cuadroCmdInterno = None
         self.frame_interior = None
         self.selected_options = []  # Inicializar la lista aquí
@@ -64,8 +64,9 @@ class PanelWindow:
         scrollbar = tk.Scrollbar(cuadroCmd2, orient=tk.VERTICAL)
         scrollbar.pack(side=tk.RIGHT, fill=tk.Y)
 
-        self.cuadroCmdInterno = tk.Canvas(
-            cuadroCmd2, bg="#191A1E", background="#191A1E", yscrollcommand=scrollbar.set, highlightthickness=0)
+        self.cuadroCmdInterno = tk.Canvas(cuadroCmd2,
+                                          bg="#191A1E", background="#191A1E",
+                                          yscrollcommand=scrollbar.set, highlightthickness=0)
         self.cuadroCmdInterno.pack(side=tk.LEFT, fill=tk.BOTH, expand=True)
 
         scrollbar.config(command=self.cuadroCmdInterno.yview)
@@ -89,80 +90,103 @@ class PanelWindow:
         # Agregamos una variable para almacenar los scripts originales sin filtrar
         self.scripts_info_original = scripts_info.copy()
 
-        self.componente_scripts(scripts_info)
+        self.crear_componente_scripts(scripts_info)
 
         # Frame (Scripts)
         # Creacion y especificacion decolor
-        cuadroTool = tk.Frame(self.ventana, bg="#1B1A20")
+        contenedor_opciones = tk.Frame(self.ventana, bg="#1B1A20")
         # Ubicacion del frame
-        cuadroTool.place(relx=0.14, rely=0.0, relwidth=0.3,
+        contenedor_opciones.place(relx=0.14, rely=0.0, relwidth=0.3,
                          relheight=1.0, anchor="n")
 
         # Label (titulo)
-        # Texto del Label
-        lblTools = tk.Label(cuadroTool, text="Scripts")
-        # Color de la letra Label
-        lblTools.config(fg="#B7BBD0")
-        # Color del label (transparente)
-        lblTools.config(bg="#1B1A20")
-        # tipo de letra y tamaño de esta
-        lblTools.config(font=("Lucida Console", 25))
-        # Ubicacion del Label
+        lblTools = tk.Label(contenedor_opciones, text="Scripts")
+        lblTools.config(fg="#B7BBD0", bg="#1B1A20",
+                        font=("Lucida Console", 25))
         lblTools.place(relx=0.5, rely=0.05, anchor="n")
 
         # Frame (Consola)
         # Creacion y especificacion decolor
-        cuadroEtiquetas = tk.Frame(cuadroTool, bg="#1E1F24")
+        contenedor_filtros = tk.Frame(contenedor_opciones, bg="#1E1F24")
         # Ubicacion del frame
-        cuadroEtiquetas.place(relx=0.55, rely=0.15,
-                              relwidth=0.8, relheight=0.7, anchor="n")
+        contenedor_filtros.place(relx=0.55, rely=0.15,
+                                 relwidth=0.8, relheight=0.7, anchor="n")
+
+        contenedor_busqueda = tk.Frame(
+            contenedor_filtros, bg="#1E1F24", padx=10, pady=10)
+        contenedor_busqueda.place(
+            relx=0.5, relwidth=1, relheight=0.15, anchor="n")
+
+        contenedor_etiquetas = tk.Frame(contenedor_filtros, bg="#1E1F24")
+        contenedor_etiquetas.place(
+            relx=0, rely=0.15, relwidth=1, relheight=0.9)
 
         # TextField (Busqueda)
-        self.TextField_Busqueda = tk.Entry(cuadroEtiquetas)
-        self.TextField_Busqueda.config(bg="#0D4044", relief="solid",
-                                       font=("Poppins", 12), border=0, width=18)
-        self.TextField_Busqueda.insert(0, 'Filtro')
-        self.TextField_Busqueda.bind('<FocusIn>', self.on_entry_click)
-        self.TextField_Busqueda.bind('<FocusOut>', self.on_focus_out)
-        self.TextField_Busqueda.config(fg='grey')
-        self.TextField_Busqueda.pack(anchor=("w"), padx=10, pady=17)
-        self.TextField_Busqueda.pack()
+        self.entry_busqueda = tk.Entry(contenedor_busqueda)
+        self.entry_busqueda.config(bg="#0D4044", relief="solid",
+                                   font=("Poppins", 12), border=0)
+        self.entry_busqueda.insert(0, 'Filtro')
+        self.entry_busqueda.bind('<FocusIn>', self.on_entry_click)
+        self.entry_busqueda.bind('<FocusOut>', self.on_focus_out)
+        self.entry_busqueda.config(fg='grey')
+        self.entry_busqueda.pack(side=tk.LEFT)
 
         # boton (Buscar)
         # configuracion de boton
-        btnSearch = tk.Button(cuadroEtiquetas, text="Buscar",
+        btnSearch = tk.Button(contenedor_busqueda, text="Buscar",
                               relief="solid", bg="#B7BBD0", fg="black",  border=0,
                               font=("Poppins", 10), command=self.buscar_scripts_por_nombre)
         # ubicacion de boton
-        btnSearch.place(relx=0.85, rely=0.025, anchor="n")
+        btnSearch.pack(side=tk.RIGHT)
 
         # Lista para los checkboxes
-        etiquetas = ["John The Ripper", "Nikto", "Nmap", "SQLMap"]
+        etiquetas = ["John",
+                     "Contraseñas",
+                     "Nikto",
+                     "Host",
+                     "Discreción",
+                     "Avanzado",
+                     "Nmap",
+                     "Puertos",
+                     "SO",
+                     "Servicios",
+                     "Hosts",
+                     "HTTP",
+                     "SQLMap",
+                     "BBDD",
+                     "SQLInjection"]
 
+        counter = 0
         for i, etiqueta in enumerate(etiquetas):
             var = tk.IntVar()
-            chk = tk.Checkbutton(cuadroEtiquetas, text=etiqueta, bg="#24B1BD", fg="black", variable=var,
-                                 onvalue=1, offvalue=0, font=("Poppins", 12), command=lambda v=var: self.update_options(v))
-            chk.pack(anchor=tk.W, padx=10, pady=5)
+            checkbox = tk.Checkbutton(contenedor_etiquetas, text=etiqueta,
+                                      bg="#24B1BD", fg="black", font=("Poppins", 11),
+                                      variable=var, onvalue=1, offvalue=0, anchor="w",
+                                      command=lambda v=var: self.update_options(v))
+            if (i < round(len(etiquetas) / 2)):
+                checkbox.grid(row=i, column=0, padx=10, pady=5)
+            else:
+                checkbox.grid(row=counter, column=1, padx=10, pady=5)
+                counter += 1
             self.selected_options.append((etiqueta, var))  # Agregar a la lista
 
         # boton (Ver Reportes)
         # configuracion de boton
-        btnR = tk.Button(cuadroTool, text="Ver reportes",
+        btnR = tk.Button(contenedor_opciones, text="Ver reportes",
                          relief="solid", bg="#B7BBD0", fg="black",
                          font=("Poppins", 11), border=0, command=self.ir_a_reportes)
         # ubicacion de boton
         btnR.place(relx=0.275, rely=0.875, anchor="n")
 
         # Boton (Abrir CLI)
-        btnCLI = tk.Button(cuadroTool, text="Buscar etiquetas",
+        btnCLI = tk.Button(contenedor_opciones, text="Buscar etiquetas",
                            relief="solid", bg="#B7BBD0", fg="black",
                            font=("Poppins", 11), border=0, command=self.buscar_scripts)
         # ubicacion de boton
         btnCLI.place(relx=0.625, rely=0.875, anchor="n")
 
         # Boton (Volver a Login)
-        btnRP = tk.Button(cuadroTool, text="Salir",
+        btnRP = tk.Button(contenedor_opciones, text="Salir",
                           relief="solid", bg="#B7BBD0", fg="black",
                           font=("Poppins", 11), border=0, command=self.ir_a_inicio_sesion)
         # ubicacion de boton
@@ -174,16 +198,16 @@ class PanelWindow:
         scripts_filtrados = [
             script for script in self.scripts_info_original if set(script["tags"]).intersection(etiquetas_seleccionadas)
         ]
-        self.componente_scripts(scripts_filtrados)
+        self.crear_componente_scripts(scripts_filtrados)
 
     def buscar_scripts_por_nombre(self):
-        nombre_a_buscar = self.TextField_Busqueda.get()
+        nombre_a_buscar = self.entry_busqueda.get()
         scripts_filtrados = [
             script for script in self.scripts_info_original if nombre_a_buscar.lower() in script["name"].lower()
         ]
-        self.componente_scripts(scripts_filtrados)
+        self.crear_componente_scripts(scripts_filtrados)
 
-    def componente_scripts(self, scripts):
+    def crear_componente_scripts(self, scripts):
         for widget in self.frame_interior.winfo_children():
             widget.destroy()
 
@@ -217,12 +241,14 @@ class PanelWindow:
 
                 label_nombre = tk.Label(nuevo_frame,
                                         text=f"{nombre}",
-                                        font=("Poppins", 12), bg='#26272B', fg="white", width=20)
+                                        font=("Poppins", 12), bg='#26272B', fg="white",
+                                        wraplength=150, width=20)
                 label_nombre.pack(pady=(5, 0))
 
                 label_etiqueta = tk.Label(nuevo_frame,
                                           text=f"| {" | ".join(etiqueta)} |",
-                                          font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
+                                          font=("Poppins", 10), bg='#26272B', fg="#B4BDE2",
+                                          wraplength=150)
                 label_etiqueta.pack()
 
                 label_parametro = tk.Label(nuevo_frame,
@@ -230,7 +256,7 @@ class PanelWindow:
                                            font=("Poppins", 10), bg='#26272B', fg="#B4BDE2")
                 label_parametro.pack()
 
-                button = tk.Button(nuevo_frame, text=f"Ejecutar {nombre}",
+                button = tk.Button(nuevo_frame, text=f"Ejecutar",
                                    relief="solid", bg="#B7BBD0", fg="black", font=("Poppins", 10), border=0,
                                    command=lambda datos=datos: self.abrir_parametros(datos=datos))
                 button.pack(pady=(0, 10))
@@ -256,15 +282,15 @@ class PanelWindow:
 
     # Metodo para hacer desaparecer el subtexto del Entry de busqueda
     def on_entry_click(self, event):
-        if self.TextField_Busqueda.get() == 'Filtro':
-            self.TextField_Busqueda.delete(0, "end")
-            self.TextField_Busqueda.config(fg='white')
+        if self.entry_busqueda.get() == 'Filtro':
+            self.entry_busqueda.delete(0, "end")
+            self.entry_busqueda.config(fg='white')
 
     # Metodo para que aparezca la etiqueta de filtro en el Entry de busqueda
     def on_focus_out(self, event):
-        if self.TextField_Busqueda.get() == '':
-            self.TextField_Busqueda.insert(0, 'Filtro')
-            self.TextField_Busqueda.config(fg='grey')
+        if self.entry_busqueda.get() == '':
+            self.entry_busqueda.insert(0, 'Filtro')
+            self.entry_busqueda.config(fg='grey')
 
     def update_options(self, var):
         for option in self.selected_options:
