@@ -109,7 +109,7 @@ class MenuWindow:
         print(reportes_usuario)
 
         for reporte in reportes_usuario["tests"]:
-            nombre_reporte = reporte["date"][:15]
+            nombre_reporte = reporte["date"][:24]
             var = tk.IntVar()
             chk = tk.Checkbutton(cuadroLI, text=nombre_reporte,
                                  bg="#24B1BD", fg="black", variable=var, wraplength=300,
