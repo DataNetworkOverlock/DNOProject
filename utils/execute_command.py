@@ -14,12 +14,14 @@ class ExecCommand:
 
     def exec(self, payload):
         nombre_script = payload["nombre_script"]
+        ruta_script = payload["source"]
         parametros = ""
 
         for key, value in payload["parameters"].items():
             parametros += value + " "
 
-        comando = f".{self.RUTA}/{nombre_script}.sh {parametros}"
+        comando = f"{ruta_script} {parametros}"
+        print("Comando: "+comando)
 
         try:
             password = os.getenv("PASSWORD")
@@ -31,8 +33,10 @@ class ExecCommand:
                            password=password)
 
             stdin, stdout, stderr = client.exec_command(comando)
+
             time.sleep(1)
             result = stdout.read().decode()
+            print("Resultado: "+result)
 
             client.close()
 
