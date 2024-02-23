@@ -1,6 +1,9 @@
 import tkinter as tk
 import os
+from utils.PDF import generate_combined_pdf
 from utils.tests import Tests
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
 
 
 class MenuWindow:
@@ -35,6 +38,8 @@ class MenuWindow:
         self.token = self.credentials["token"]
         self.username = self.credentials["username"]
         self.test = Tests(token=self.token)
+
+        self.checkbox_data = {}
 
         self.create_widgets()
 
@@ -106,25 +111,31 @@ class MenuWindow:
 
         reportes_usuario = self.test.get_tests_by_username(
             username=self.username)["response"]
-        print(reportes_usuario)
 
         for reporte in reportes_usuario["tests"]:
             nombre_reporte = reporte["date"][:24]
             var = tk.IntVar()
             chk = tk.Checkbutton(cuadroLI, text=nombre_reporte,
-                                 bg="#24B1BD", fg="black", variable=var, wraplength=300,
-                                 onvalue=1, offvalue=0, font=("Poppins", 11),
-                                 command=lambda nombre=nombre_reporte: self.mostrar_contenido_checkbox(nombre))
+                                bg="#24B1BD", fg="black", variable=var, wraplength=300,
+                                onvalue=1, offvalue=0, font=("Poppins", 11),
+                                command=lambda nombre=nombre_reporte: self.mostrar_contenido_checkbox(nombre))           
             chk.var = var
             chk.pack(anchor=tk.W, padx=10, pady=5)
             self.Checkboxes.append(chk)
+
+            # Agregar el nombre del reporte y su contenido al diccionario
+            self.checkbox_data[nombre_reporte] = {
+                'selected': var,
+                'content': reporte["report"]
+            }
+            # Asignar el contenido al diccionario self.contenido
             self.contenido[nombre_reporte] = reporte["report"]
 
         # boton (Exportar a PDF)
         # configuracion de boton
         btnPDF = tk.Button(cuadroV, text="PDF", relief="solid",
                            bg="#B7BBD0", fg="black", font=("Poppins", 12),
-                           border=0, command=self.handle_checkboxes)
+                           border=0, command=self.GeneracionPDF)
         # ubicacion de boton
         btnPDF.place(relx=0.91, rely=0.875, anchor="n")
 
@@ -172,20 +183,21 @@ class MenuWindow:
                 checkbox.pack_forget()
 
     # Función para manejar los checkboxes seleccionados
-    def handle_checkboxes(self):
-        for checkbox in self.Checkboxes:
-            if checkbox.var.get() == 1:
+        for nombre_checkbox, data in self.checkbox_data.items():
+            if data['selected'].get() == 1:
                 # Checkbox seleccionado, hacer algo con él
-                print(f"{checkbox.cget('text')} seleccionado")
+               print(f"{nombre_checkbox} seleccionado")
+               print(f"Contenido: {data['content']}")
 
-    # Función para mostrar el contenido del archivo seleccionado en el Text
-    def mostrar_contenido(self, selected_item):
-        if selected_item in self.contenido:
-            # Obtener el contenido del archivo seleccionado
-            contenido_text = self.contenido[selected_item]
-            # Borrar el contenido actual del Text
-            self.text_area.delete('1.0', tk.END)
-            self.text_area.insert(tk.END, contenido_text)
+    def GeneracionPDF(self):
+        titles = []
+        contents = []
+        output_pdf_path = "pdf_combinado.pdf"
+        for nombre_checkbox, data in self.checkbox_data.items():
+            if data['selected'].get() == 1:
+                titles.append(f"{nombre_checkbox}")  # Agregar título a la lista
+                contents.append(f"Contenido:\n{data['content']}")  # Agregar contenido a la lista
+        generate_combined_pdf(titles, contents, output_pdf_path)
 
     # Función para mostrar el contenido del archivo asociado al checkbox seleccionado
     def mostrar_contenido_checkbox(self, nombre_checkbox):
@@ -194,4 +206,6 @@ class MenuWindow:
             contenido_text = self.contenido[nombre_checkbox]
             # Borrar el contenido actual del Text
             self.text_area.delete('1.0', tk.END)
+            print("Contenido:", contenido_text)
             self.text_area.insert(tk.END, contenido_text)
+            print("contendio:" + contenido_text)
