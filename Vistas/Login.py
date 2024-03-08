@@ -86,7 +86,7 @@ class App:
         lblPass.pack()
 
         # TextField(Password)
-        self.TextField_Pass = tk.Entry(cuadro)
+        self.TextField_Pass = tk.Entry(cuadro, show='*')
         # Configuracion de text fielg
         self.TextField_Pass.config(bg="#0D4044", font=(
             "Poppins", 12), relief="solid", border=0, width=100, fg="white")
