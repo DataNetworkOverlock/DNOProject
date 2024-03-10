@@ -36,7 +36,6 @@ class ExecCommand:
 
             time.sleep(1)
             result = stdout.read().decode()
-            print("Resultado: "+result)
 
             client.close()
 
