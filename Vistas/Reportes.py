@@ -192,7 +192,7 @@ class MenuWindow:
     def GeneracionPDF(self):
         titles = []
         contents = []
-        output_pdf_path = "Reporte_Final.pdf"
+        output_pdf_path = "C:/Users/Girox/Desktop/Reporte_Final.pdf"
         for nombre_checkbox, data in self.checkbox_data.items():
             if data['selected'].get() == 1:
                 titles.append(f"{nombre_checkbox}")  # Agregar título a la lista

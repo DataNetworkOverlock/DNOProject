@@ -47,7 +47,7 @@ class PanelWindow:
 
         # Label (Principal)
         # Texto del Label
-        lblOverlock = tk.Label(cuadroCmd, text="OVERLOCK")
+        lblOverlock = tk.Label(cuadroCmd, text="Data Network OverLock")
         # Color de la letra Label
         lblOverlock.config(fg="#B4BDE2")
         # Color del label (transparente)
